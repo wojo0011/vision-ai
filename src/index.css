@@ -42,7 +42,7 @@
 }
 
 .sample-preview-tile.expanded {
-  height: 100%;
+  height: 27em;
 }
 
 .sample-preview-overlay {
@@ -50,7 +50,6 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(14, 18, 23, 0.82);
   border-bottom-left-radius: 0.9rem;
   border-bottom-right-radius: 0.9rem;
   padding: 0.7rem 0.7rem 0.7rem 0.7rem;
@@ -772,8 +771,9 @@ input {
   width: 100%;
   min-height: 0;
   min-width: 0;
+  
 }
-}
+
 
 .sample-card,
 .empty-gallery {
@@ -782,10 +782,15 @@ input {
   border-radius: 25px;
 }
 
+
 .sample-card {
   display: grid;
   grid-template-rows: 12rem auto;
   align-content: start;
+}
+
+.sample-card.expanded {
+  grid-template-rows: 27rem auto;
 }
 
 .sample-preview-button {
@@ -796,7 +801,7 @@ input {
   height: 12rem;
   padding: 0.7rem;
   border: none;
-  background: rgba(255, 255, 255, 0.03);
+  
   cursor: pointer;
 }
 

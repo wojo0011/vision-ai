@@ -1,3 +1,18 @@
+function PlusIcon(props) {
+  return (
+    <IconBase {...props}>
+      <line x1="12" y1="5" x2="12" y2="19" />
+      <line x1="5" y1="12" x2="19" y2="12" />
+    </IconBase>
+  );
+}
+function MinusIcon(props) {
+  return (
+    <IconBase {...props}>
+      <line x1="5" y1="12" x2="19" y2="12" />
+    </IconBase>
+  );
+}
 function LabelIcon(props) {
   return (
     <IconBase {...props}>
@@ -12,6 +27,17 @@ function CameraIcon(props) {
     <IconBase {...props}>
       <path d="M4 8h3l1.8-2h6.4L17 8h3a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2Z" />
       <circle cx="12" cy="13" r="4" />
+    </IconBase>
+  );
+}
+
+function ExpandIcon(props) {
+  return (
+    <IconBase {...props}>
+      <path d="M15 4h5v5" />
+      <path d="M14 10 20 4" />
+      <path d="M9 20H4v-5" />
+      <path d="M10 14 4 20" />
     </IconBase>
   );
 }
@@ -1100,12 +1126,11 @@ export default function App() {
                   {datasetGalleryItems.map((item) => {
                     const isWorking = imageActionPath === item.relativePath;
                     return (
-                      <article className="sample-card" key={item.relativePath}>
+                      <article className={isGalleryFullscreen ? "sample-card expanded" : "sample-card"} key={item.relativePath}>
                         <div className={isGalleryFullscreen ? "sample-preview-tile expanded" : "sample-preview-tile"}>
-                          <button
+                          <div
                             className="sample-preview-button"
                             onClick={() => handleOpenImageModal(item)}
-                            type="button"
                           >
                             <img
                               className="sample-preview"
@@ -1139,7 +1164,7 @@ export default function App() {
                                 </div>
                               </div>
                             )}
-                          </button>
+                          </div>
                           {!isGalleryFullscreen && (
                             <div className="sample-card-body">
                               <p className="sample-label sample-label-row">
