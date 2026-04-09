@@ -17,6 +17,7 @@ DEFAULT_MODELS_DIR = PROJECT_ROOT / "models"
 CLASSIFIER_FILENAME = "classifier.keras"
 LABELS_FILENAME = "labels.json"
 METADATA_FILENAME = "metadata.json"
+HISTORY_FILENAME = "history.json"
 
 
 class InferenceError(RuntimeError):
@@ -107,6 +108,47 @@ def list_available_models(models_dir: Path | None = None) -> list[ModelRecord]:
 
 def serialize_model_record(record: ModelRecord) -> dict[str, Any]:
     metadata = _safe_read_json(record.metadata_path)
+    history_path = record.run_dir / HISTORY_FILENAME
+    history = _safe_read_json(history_path if history_path.exists() else None)
+
+    def _best_metric(values: Any) -> float | None:
+        if not isinstance(values, list) or not values:
+            return None
+        try:
+            return float(max(values))
+        except (TypeError, ValueError):
+            return None
+
+    def _latest_metric(values: Any) -> float | None:
+        if not isinstance(values, list) or not values:
+            return None
+        try:
+            return float(values[-1])
+        except (TypeError, ValueError):
+            return None
+
+    run_size_bytes = 0
+    for path in record.run_dir.rglob("*"):
+        if path.is_file():
+            run_size_bytes += path.stat().st_size
+
+    dataset_info = metadata.get("dataset", {})
+    dataset_labels = dataset_info.get("labels", [])
+
+    accuracy_summary = {
+        "train_accuracy_final": _latest_metric(history.get("accuracy")),
+        "train_accuracy_best": _best_metric(history.get("accuracy")),
+        "val_accuracy_final": _latest_metric(history.get("val_accuracy")),
+        "val_accuracy_best": _best_metric(history.get("val_accuracy")),
+        "train_loss_final": _latest_metric(history.get("loss")),
+        "val_loss_final": _latest_metric(history.get("val_loss")),
+    }
+
+    model_type = metadata.get("model_type")
+    if not model_type:
+        architecture = metadata.get("model_architecture") or "Sequential"
+        model_type = f"Keras {architecture} CNN"
+
     return {
         "name": record.name,
         "run_dir": str(record.run_dir),
@@ -115,6 +157,13 @@ def serialize_model_record(record: ModelRecord) -> dict[str, Any]:
         "training_duration_seconds": metadata.get("training_duration_seconds"),
         "image_size": metadata.get("config", {}).get("image_size"),
         "class_count": len(metadata.get("class_names", [])),
+        "labels": metadata.get("class_names", []),
+        "dataset_total_images": dataset_info.get("total_images"),
+        "dataset_label_count": dataset_info.get("label_count"),
+        "dataset_labels": dataset_labels,
+        "run_size_bytes": run_size_bytes,
+        "model_type": model_type,
+        "accuracy": accuracy_summary,
         "classifier_path": str(record.classifier_path),
     }
 

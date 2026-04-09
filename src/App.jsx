@@ -498,6 +498,7 @@ export default function App() {
   const [trainingError, setTrainingError] = useState("");
   const [modelMessage, setModelMessage] = useState("");
   const [isDeletingModel, setIsDeletingModel] = useState(false);
+  const [pendingModelDelete, setPendingModelDelete] = useState("");
   const [imageActionPath, setImageActionPath] = useState("");
   const [imageActionMessage, setImageActionMessage] = useState("");
   const [activeImagePath, setActiveImagePath] = useState("");
@@ -883,20 +884,13 @@ export default function App() {
     }
   });
 
-  const handleDeleteModel = useEffectEvent(async () => {
-    const modelToDelete = selectedModel;
+  const handleDeleteModel = useEffectEvent(async (modelToDelete) => {
     if (!modelToDelete || isDeletingModel) {
       return;
     }
 
-    const confirmed = window.confirm(
-      `Delete model "${modelToDelete}"? This removes its files from the models folder.`
-    );
-    if (!confirmed) {
-      return;
-    }
-
     setIsDeletingModel(true);
+    setPendingModelDelete("");
     setModelsError("");
     setModelMessage("");
     setTrainingError("");
@@ -923,6 +917,21 @@ export default function App() {
     } finally {
       setIsDeletingModel(false);
     }
+  });
+
+  const openDeleteModelModal = useEffectEvent((modelName) => {
+    const targetModel = modelName || selectedModel;
+    if (!targetModel || isDeletingModel) {
+      return;
+    }
+    setPendingModelDelete(targetModel);
+  });
+
+  const closeDeleteModelModal = useEffectEvent(() => {
+    if (isDeletingModel) {
+      return;
+    }
+    setPendingModelDelete("");
   });
 
   const handleOpenImageModal = useEffectEvent((item) => {
@@ -1828,6 +1837,52 @@ export default function App() {
         </div>
       ) : null}
 
+      {pendingModelDelete ? (
+        <div className="modal-backdrop" onClick={closeDeleteModelModal} role="presentation">
+          <div
+            className="image-modal model-delete-modal"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="delete-model-modal-title"
+          >
+            <div className="modal-header">
+              <div>
+                <p className="panel-label">Delete Model</p>
+                <h2 id="delete-model-modal-title">Confirm deletion</h2>
+              </div>
+            </div>
+
+            <p className="muted">
+              Delete model <strong>{pendingModelDelete}</strong>? This action permanently removes
+              its files from the models folder.
+            </p>
+
+            <div className="button-row">
+              <button
+                className="ghost-button"
+                onClick={closeDeleteModelModal}
+                type="button"
+                disabled={isDeletingModel}
+              >
+                <span className="button-content">Cancel</span>
+              </button>
+              <button
+                className="danger-button"
+                onClick={() => handleDeleteModel(pendingModelDelete)}
+                type="button"
+                disabled={isDeletingModel}
+              >
+                <span className="button-content">
+                  {isDeletingModel ? <ClockIcon /> : <TrashIcon />}
+                  {isDeletingModel ? "Deleting..." : "Delete model"}
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       <section className="results-grid">
         <article className="results-card">
           <p className="panel-label">Top Result</p>
@@ -1879,7 +1934,7 @@ export default function App() {
             </div>
             <button
               className="danger-button"
-              onClick={handleDeleteModel}
+              onClick={openDeleteModelModal}
               type="button"
               disabled={!selectedModel || isDeletingModel}
             >
@@ -1911,6 +1966,91 @@ export default function App() {
               <dd className="meta-line"><ClockIcon /> {formatDuration(selectedModelMeta?.training_duration_seconds)}</dd>
             </div>
           </dl>
+        </article>
+
+        <article className="results-card log-card">
+          <p className="panel-label">Available Models</p>
+          <h2>Model catalog</h2>
+          {models.length ? (
+            <div className="training-log-list">
+              {models.map((model) => (
+                <div className="training-log-item" key={`model-catalog-${model.name}`}>
+                  <div className="training-log-head">
+                    <strong>{model.name}</strong>
+                    <div className="log-head-meta">
+                      <span className="log-badge">
+                        <ModelIcon className="icon chip-icon" />
+                        <span>{model.model_type || "Keras CNN"}</span>
+                      </span>
+                      <span className="log-meta-item"><CalendarIcon /> {formatTimestamp(model.trained_at)}</span>
+                      <span className="log-meta-item"><ClockIcon /> {formatDuration(model.training_duration_seconds)}</span>
+                      <button
+                        className="danger-button compact-button"
+                        onClick={() => openDeleteModelModal(model.name)}
+                        type="button"
+                        disabled={isDeletingModel}
+                      >
+                        <span className="button-content"><TrashIcon /> Delete</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="models-metadata-grid">
+                    <div>
+                      <dt>Images</dt>
+                      <dd>{model.dataset_total_images ?? "--"}</dd>
+                    </div>
+                    <div>
+                      <dt>Labels</dt>
+                      <dd>{model.dataset_label_count ?? model.class_count ?? "--"}</dd>
+                    </div>
+                    <div>
+                      <dt>Model size</dt>
+                      <dd>{formatFileSize(model.run_size_bytes)}</dd>
+                    </div>
+                    <div>
+                      <dt>Input size</dt>
+                      <dd>{model.image_size ?? "--"}</dd>
+                    </div>
+                    <div>
+                      <dt>Val Acc (best)</dt>
+                      <dd>
+                        {Number.isFinite(model?.accuracy?.val_accuracy_best)
+                          ? formatConfidence(model.accuracy.val_accuracy_best)
+                          : "--"}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>Val Acc (final)</dt>
+                      <dd>
+                        {Number.isFinite(model?.accuracy?.val_accuracy_final)
+                          ? formatConfidence(model.accuracy.val_accuracy_final)
+                          : "--"}
+                      </dd>
+                    </div>
+                  </div>
+
+                  <div className="label-chip-row">
+                    {(model.dataset_labels ?? []).length
+                      ? model.dataset_labels.map((label) => (
+                        <span className="label-chip" key={`${model.name}-${label.name}`}>
+                          <LabelIcon className="icon chip-icon" />
+                          <span>{label.name} | {label.image_count}</span>
+                        </span>
+                      ))
+                      : (model.labels ?? []).map((label) => (
+                        <span className="label-chip" key={`${model.name}-${label}`}>
+                          <LabelIcon className="icon chip-icon" />
+                          <span>{label}</span>
+                        </span>
+                      ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="muted">No models available yet.</p>
+          )}
         </article>
 
         <article className="results-card log-card">

@@ -560,6 +560,16 @@ input {
   padding: 0.9rem 1rem;
 }
 
+.field select {
+  background-color: #1a2029;
+  color: #f5f1e8;
+}
+
+.field select option {
+  background-color: #1a2029;
+  color: #f5f1e8;
+}
+
 .text-input::placeholder {
   color: rgba(208, 215, 223, 0.55);
 }
@@ -992,6 +1002,33 @@ input {
   color: #cfe6e1;
 }
 
+.models-metadata-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin: 0.8rem 0;
+}
+
+.models-metadata-grid div {
+  padding: 0.7rem 0.8rem;
+  border-radius: 0.85rem;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.models-metadata-grid dt {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.7rem;
+  color: #e4a969;
+}
+
+.models-metadata-grid dd {
+  margin: 0.35rem 0 0;
+  color: #f5f1e8;
+  font-weight: 600;
+}
+
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -1012,6 +1049,10 @@ input {
   background: rgba(14, 18, 23, 0.94);
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
   padding: 1.25rem;
+}
+
+.model-delete-modal {
+  width: min(560px, 100%);
 }
 
 .modal-header {
@@ -1129,6 +1170,7 @@ input {
   }
 
   .capture-sequence-stats,
+  .models-metadata-grid,
   .modal-meta-grid {
     grid-template-columns: 1fr;
   }
