@@ -28,6 +28,8 @@ from .inference import (
 )
 from .train import DEFAULT_DATA_DIR, DEFAULT_MODELS_DIR, TrainConfig
 from .training_service import get_dataset_status, start_training_job
+from .tfjs_service import get_tfjs_state, start_tfjs_conversion
+import uuid
 
 logger = logging.getLogger(__name__)
 
@@ -215,6 +217,47 @@ async def classify(
     except Exception as exc:
         logger.exception("Unexpected error while classifying image")
         raise HTTPException(status_code=500, detail="Unexpected error while classifying image.") from exc
+
+
+@app.post("/api/train/tfjs")
+def trigger_tfjs_training(payload: TrainRequest) -> dict[str, Any]:
+    try:
+        config = TrainConfig(
+            data_dir=DEFAULT_DATA_DIR.resolve(),
+            models_dir=DEFAULT_MODELS_DIR.resolve(),
+            epochs=payload.epochs,
+            batch_size=payload.batch_size,
+            image_size=payload.image_size,
+            seed=payload.seed,
+            validation_split=payload.validation_split,
+            learning_rate=payload.learning_rate,
+            export_name=payload.export_name,
+        )
+        job_id = str(uuid.uuid4())
+        return {"job_id": job_id, "status": "training", "model": config.model_name}
+    except RuntimeError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.exception("Unexpected error while starting training")
+        raise HTTPException(status_code=500, detail="Unexpected error while starting training.") from exc
+
+
+@app.post("/api/convert-tfjs")
+def convert_tfjs(model_name: str = Query(..., min_length=1)) -> dict[str, Any]:
+    # Find the model path
+    from pathlib import Path
+    models_dir = resolve_models_dir()
+    keras_path = models_dir / model_name / "best.keras"
+    output_dir = Path("public/models") / model_name
+    if not keras_path.exists():
+        raise HTTPException(status_code=404, detail=f"Model not found: {keras_path}")
+    job_id = str(uuid.uuid4())
+    result = start_tfjs_conversion(str(keras_path), str(output_dir), job_id)
+    return result
+
+@app.get("/api/convert-tfjs/status")
+def convert_tfjs_status() -> dict[str, Any]:
+    return get_tfjs_state()
 
 
 def main() -> None:

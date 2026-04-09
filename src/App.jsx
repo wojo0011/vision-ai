@@ -50,6 +50,17 @@ import {
   useState,
 } from "react";
 
+import * as tf from "@tensorflow/tfjs";
+
+// StatusDot component for inference mode indicator
+function StatusDot({ color = "green" }) {
+  return (
+    <svg width="14" height="14" style={{ marginLeft: 4, verticalAlign: "middle" }}>
+      <circle cx="7" cy="7" r="5" fill={color} stroke={color} />
+    </svg>
+  );
+}
+
 function ImagesIcon(props) {
   return (
     <IconBase {...props}>
@@ -440,7 +451,14 @@ async function deleteDatasetImage(relativePath) {
   return response.json();
 }
 
+
 export default function App() {
+  // All hooks at the top
+  const [tfjsStatus, setTfjsStatus] = useState("idle"); // idle | converting | ready | error
+  const [tfjsModel, setTfjsModel] = useState(null);
+  const [tfjsLabels, setTfjsLabels] = useState([]);
+  const [inferenceMode, setInferenceMode] = useState("api"); // "api" or "tfjs"
+  const [liveClassificationEnabled, setliveClassificationEnabled] = useState(false);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const animationFrameRef = useRef(0);
@@ -463,7 +481,6 @@ export default function App() {
   const [classification, setClassification] = useState(null);
   const [predictionError, setPredictionError] = useState("");
   const [isClassifying, setIsClassifying] = useState(false);
-  const [autoClassify, setAutoClassify] = useState(false);
   const [collectionMode, setCollectionMode] = useState(false);
   const [isGalleryExpanded, setIsGalleryExpanded] = useState(false);
   const [labelInput, setLabelInput] = useState("");
@@ -485,6 +502,107 @@ export default function App() {
   const [imageActionMessage, setImageActionMessage] = useState("");
   const [activeImagePath, setActiveImagePath] = useState("");
   const [modalLabelDraft, setModalLabelDraft] = useState("");
+
+  // --- All functions and effects below this line ---
+
+  // Trigger TF.js conversion for selected model
+  async function triggerTfjsConversion(modelName) {
+    setTfjsStatus("converting");
+    setInferenceMode("api");
+    setliveClassificationEnabled(false);
+    setTfjsModel(null);
+    setTfjsLabels([]);
+
+    const response = await fetch(
+      `/api/convert-tfjs?model_name=${encodeURIComponent(modelName)}`,
+      { method: "POST" }
+    );
+    if (!response.ok) {
+      throw new Error(await readErrorMessage(response));
+    }
+
+    const payload = await response.json();
+    if (!payload?.job_id) {
+      throw new Error("TFJS conversion job id was missing from backend response.");
+    }
+
+    await pollTfjsStatus(modelName, payload.job_id);
+  }
+
+  // Poll TF.js conversion status
+  async function pollTfjsStatus(modelName, expectedJobId) {
+    let done = false;
+    setTfjsStatus("converting");
+    while (!done) {
+      const res = await fetch("/api/convert-tfjs/status");
+      if (!res.ok) {
+        throw new Error(await readErrorMessage(res));
+      }
+      const status = await res.json();
+
+      if (status.job_id !== expectedJobId) {
+        await new Promise((resolve) => setTimeout(resolve, 600));
+        continue;
+      }
+
+      if (status.in_progress) {
+        await new Promise((resolve) => setTimeout(resolve, 1200));
+        continue;
+      }
+
+      if (status.last_error) {
+        setTfjsStatus("error");
+        setInferenceMode("api");
+        setliveClassificationEnabled(false);
+        done = true;
+      } else if (status.last_result && status.last_result.returncode === 0) {
+        try {
+          const model = await tf.loadLayersModel(
+            `/models/${encodeURIComponent(modelName)}/model.json`
+          );
+          let labels = [];
+          const labelsResponse = await fetch(
+            `/models/${encodeURIComponent(modelName)}/labels.json`
+          );
+          if (labelsResponse.ok) {
+            const labelsPayload = await labelsResponse.json();
+            if (Array.isArray(labelsPayload)) {
+              labels = labelsPayload.map((label) => String(label));
+            }
+          }
+
+          setTfjsModel(model);
+          setTfjsLabels(labels);
+          setTfjsStatus("ready");
+          setInferenceMode("tfjs");
+        } catch (e) {
+          setPredictionError(e?.message || "Could not load converted TFJS model.");
+          setTfjsStatus("error");
+          setInferenceMode("api");
+          setliveClassificationEnabled(false);
+        }
+        done = true;
+      } else {
+        setTfjsStatus("idle");
+        setInferenceMode("api");
+        setliveClassificationEnabled(false);
+        done = true;
+      }
+    }
+  }
+
+  // When selectedModel changes, trigger TF.js conversion
+  useEffect(() => {
+    if (selectedModel) {
+      void triggerTfjsConversion(selectedModel).catch((error) => {
+        setTfjsStatus("error");
+        setInferenceMode("api");
+        setliveClassificationEnabled(false);
+        setPredictionError(error.message || "TFJS conversion failed.");
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedModel]);
 
   const drawVideoFrame = useEffectEvent(() => {
     const video = videoRef.current;
@@ -558,15 +676,50 @@ export default function App() {
     setIsClassifying(true);
     setPredictionError("");
 
-    const blob = await captureCanvasBlob(canvas);
-    if (!blob) {
-      setIsClassifying(false);
-      setPredictionError("Could not capture the current frame.");
-      return;
-    }
-
     try {
-      const payload = await classifyFrame(blob, selectedModel || undefined);
+      let payload = null;
+      if (inferenceMode === "tfjs" && tfjsModel) {
+        const imageSize = Number(selectedModelMeta?.image_size) || 180;
+        const pixels = tf.browser.fromPixels(canvas);
+        const resized = tf.image.resizeBilinear(pixels, [imageSize, imageSize]);
+        const batch = resized.expandDims(0).toFloat();
+        const output = tfjsModel.predict(batch);
+        const outputTensor = Array.isArray(output) ? output[0] : output;
+        const values = await outputTensor.data();
+        const probabilities = Array.from(values);
+
+        pixels.dispose();
+        resized.dispose();
+        batch.dispose();
+        if (Array.isArray(output)) {
+          output.forEach((tensor) => tensor.dispose());
+        } else {
+          outputTensor.dispose();
+        }
+
+        const rankedPredictions = probabilities
+          .map((confidence, index) => ({
+            label: tfjsLabels[index] || `class_${index}`,
+            confidence,
+          }))
+          .sort((left, right) => right.confidence - left.confidence);
+
+        payload = {
+          top_prediction: rankedPredictions[0] || null,
+          predictions: rankedPredictions.slice(0, 3),
+          model: { name: selectedModel },
+          image_size: imageSize,
+        };
+      } else {
+        // API inference
+        const blob = await captureCanvasBlob(canvas);
+        if (!blob) {
+          setIsClassifying(false);
+          setPredictionError("Could not capture the current frame.");
+          return;
+        }
+        payload = await classifyFrame(blob, selectedModel || undefined);
+      }
       if (latestClassifyRef.current !== operationId) {
         return;
       }
@@ -948,7 +1101,14 @@ export default function App() {
   }, [collectionMode]);
 
   useEffect(() => {
-    if (!autoClassify || cameraState !== "ready" || models.length === 0 || collectionMode) {
+    if (
+      !liveClassificationEnabled
+      || inferenceMode !== "tfjs"
+      || !tfjsModel
+      || cameraState !== "ready"
+      || models.length === 0
+      || collectionMode
+    ) {
       return;
     }
 
@@ -957,7 +1117,14 @@ export default function App() {
     }, 1800);
 
     return () => window.clearInterval(intervalId);
-  }, [autoClassify, cameraState, models.length, collectionMode]);
+  }, [
+    liveClassificationEnabled,
+    inferenceMode,
+    tfjsModel,
+    cameraState,
+    models.length,
+    collectionMode,
+  ]);
 
   useEffect(() => {
     if (!isTraining) {
@@ -1079,6 +1246,7 @@ export default function App() {
               : "hero-copy"
           }
         >
+       
           {collectionMode ? (
             <>
               <div className="collection-browser-header">
@@ -1247,7 +1415,7 @@ export default function App() {
                       <span>Collection mode</span>
                       <span>{overlayRightLabel}</span>
                     </>
-                  ) : autoClassify && activePrediction ? (
+                  ) : liveClassificationEnabled && activePrediction ? (
                     <>
                       <span className="overlay-prediction">
                         <strong>{activePrediction.label}</strong>
@@ -1276,7 +1444,7 @@ export default function App() {
                       const enabled = event.target.checked;
                       setCollectionMode(enabled);
                       if (enabled) {
-                        setAutoClassify(false);
+                        setliveClassificationEnabled(false);
                         setPredictionError("");
                       }
                     }}
@@ -1469,25 +1637,78 @@ export default function App() {
                         className="primary-button"
                         onClick={captureAndClassify}
                         type="button"
-                        disabled={cameraState !== "ready" || isClassifying || models.length === 0}
+                        disabled={
+                          cameraState !== "ready"
+                          || models.length === 0
+                          || liveClassificationEnabled
+                          || isClassifying
+                        }
                       >
                         <span className="button-content">
-                          {isClassifying ? <ClockIcon /> : <CameraIcon />}
-                          {isClassifying ? "Classifying..." : "Classify current frame"}
+                          {liveClassificationEnabled
+                            ? <CameraIcon />
+                            : isClassifying
+                              ? <ClockIcon />
+                              : <CameraIcon />}
+                          {liveClassificationEnabled
+                            ? "Classify current frame"
+                            : isClassifying
+                              ? "Classifying..."
+                              : "Classify current frame"}
+                        </span>
+                      </button>
+                      <button
+                        className={
+                          liveClassificationEnabled
+                            ? "live-stream-button on"
+                            : tfjsStatus === "converting"
+                              ? "live-stream-button pending"
+                              : "live-stream-button off"
+                        }
+                        onClick={() => {
+                          if (!liveClassificationEnabled && (inferenceMode !== "tfjs" || !tfjsModel)) {
+                            return;
+                          }
+                          setliveClassificationEnabled((value) => {
+                            const nextValue = !value;
+                            if (!nextValue) {
+                              setClassification(null);
+                            }
+                            return nextValue;
+                          });
+                        }}
+                        type="button"
+                        disabled={cameraState !== "ready" || models.length === 0 || tfjsStatus === "converting"}
+                      >
+                        <span className="button-content">
+                          <StatusDot
+                            color={
+                              liveClassificationEnabled
+                                ? "#7ef0db"
+                                : tfjsStatus === "error"
+                                  ? "#ff7a7a"
+                                  : "#f5b860"
+                            }
+                          />
+                          {liveClassificationEnabled
+                            ? "Live Classification ON"
+                            : tfjsStatus === "converting"
+                              ? "Preparing live classification"
+                              : "Live Classification OFF"}
                         </span>
                       </button>
 
-                      <button
-                        className={autoClassify ? "secondary-button active" : "secondary-button"}
-                        onClick={() => setAutoClassify((value) => !value)}
-                        type="button"
-                        disabled={cameraState !== "ready" || models.length === 0}
-                      >
-                        <span className="button-content">
-                          <RefreshIcon />
-                          {autoClassify ? "Stop auto classify" : "Auto classify"}
-                        </span>
-                      </button>
+                      <span className="live-stream-hint">
+                        {tfjsStatus === "converting"
+                          ? "Converting model for live classification, this may take a moment..."
+                          : inferenceMode === "tfjs"
+                            ? "On-device model ready"
+                            : tfjsStatus === "error"
+                              ? "On-device model unavailable"
+                              : "Select a model to prepare live classification"}
+                      </span>
+            
+                     
                     </div>
                   </>
                 )}

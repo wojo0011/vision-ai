@@ -331,6 +331,49 @@ input {
   background: rgba(89, 206, 191, 0.22);
 }
 
+.live-stream-button {
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 0.8rem 1.1rem;
+  color: #f5f1e8;
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.live-stream-button.on {
+  background: linear-gradient(135deg, rgba(40, 191, 144, 0.35), rgba(44, 156, 138, 0.45));
+  border-color: rgba(98, 240, 199, 0.55);
+  box-shadow: 0 12px 28px rgba(38, 164, 129, 0.28);
+}
+
+.live-stream-button.off {
+  background: linear-gradient(135deg, rgba(240, 168, 76, 0.2), rgba(187, 114, 49, 0.22));
+  border-color: rgba(245, 184, 96, 0.45);
+}
+
+.live-stream-button.pending {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.22));
+  border-color: rgba(157, 170, 246, 0.42);
+}
+
+.live-stream-button:hover {
+  transform: translateY(-1px);
+}
+
+.live-stream-button:disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.live-stream-hint {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.875rem;
+  color: #c9d3de;
+}
+
 .danger-button {
   background: rgba(255, 132, 132, 0.12);
   color: #ffd2ce;
@@ -634,7 +677,19 @@ input {
 }
 
 .message.error {
-  color: #ffada0;
+  color: #ffd7d1;
+  background: linear-gradient(
+    135deg,
+    rgba(245, 77, 77, 0.16),
+    rgba(163, 38, 38, 0.2)
+  );
+  border: 1px solid rgba(255, 125, 125, 0.38);
+  border-left: 4px solid rgba(255, 163, 134, 0.95);
+  border-radius: 0.95rem;
+  padding: 0.72rem 0.9rem;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+  font-weight: 600;
+  line-height: 1.35;
 }
 
 .compact-line {
