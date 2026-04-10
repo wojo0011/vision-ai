@@ -9,3 +9,5 @@ dist/
 
 /training/images/*
 !/training/images/.gitkeep
+.env
+*.env
