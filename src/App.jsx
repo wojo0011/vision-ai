@@ -127,6 +127,18 @@ const EMPTY_CLASSIFICATION_PREVIEWS = {
   accuracy: "",
   privacy: "",
 };
+const VISUALIZATION_SWATCHES = [
+  "#59ceb6",
+  "#ffc16f",
+  "#7aa7ff",
+  "#ff8a7a",
+  "#c88dff",
+  "#8de070",
+  "#ffcf66",
+  "#6fd6ff",
+  "#f6a6ff",
+  "#ffb37a",
+];
 
 function createWorkingCanvas() {
   if (typeof document === "undefined") {
@@ -462,6 +474,586 @@ function confidenceToneClass(confidence) {
   }
 
   return "overlay-confidence low";
+}
+
+function formatTrendValue(value, kind = "number") {
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue)) {
+    return "--";
+  }
+
+  if (kind === "percent") {
+    return formatConfidence(numericValue);
+  }
+
+  return numericValue >= 10 ? numericValue.toFixed(1) : numericValue.toFixed(3);
+}
+
+function formatMetricDecimal(value, digits = 4) {
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue)) {
+    return "--";
+  }
+
+  return numericValue
+    .toFixed(digits)
+    .replace(/\.?0+$/, "");
+}
+
+function buildChartPath(values, minValue, maxValue, width, height, padding = 18, totalPointCount = values.length) {
+  if (!Array.isArray(values) || values.length === 0) {
+    return "";
+  }
+
+  const usableWidth = width - padding * 2;
+  const usableHeight = height - padding * 2;
+  const safeSpan = maxValue - minValue || 1;
+  const pointCount = Math.max(1, Number(totalPointCount) || values.length);
+
+  return values
+    .map((value, index) => {
+      const x = pointCount === 1
+        ? width / 2
+        : padding + (usableWidth * index) / (pointCount - 1);
+      const y =
+        height - padding - ((Number(value) - minValue) / safeSpan) * usableHeight;
+      return `${index === 0 ? "M" : "L"} ${x.toFixed(2)} ${y.toFixed(2)}`;
+    })
+    .join(" ");
+}
+
+function buildChartPoints(
+  values,
+  minValue,
+  maxValue,
+  width,
+  height,
+  padding = 18,
+  totalPointCount = values.length
+) {
+  if (!Array.isArray(values) || values.length === 0) {
+    return [];
+  }
+
+  const usableWidth = width - padding * 2;
+  const usableHeight = height - padding * 2;
+  const safeSpan = maxValue - minValue || 1;
+  const pointCount = Math.max(1, Number(totalPointCount) || values.length);
+
+  return values.map((value, index) => {
+    const x = pointCount === 1
+      ? width / 2
+      : padding + (usableWidth * index) / (pointCount - 1);
+    const y = height - padding - ((Number(value) - minValue) / safeSpan) * usableHeight;
+    return { x, y, value: Number(value), index };
+  });
+}
+
+function TrainingMetricChart({
+  title,
+  subtitle,
+  series,
+  valueKind = "number",
+  domain = "auto",
+}) {
+  const [hoveredEpochIndex, setHoveredEpochIndex] = useState(null);
+  const activeSeries = (series ?? []).filter(
+    (item) => Array.isArray(item.values) && item.values.length > 0
+  );
+
+  if (!activeSeries.length) {
+    return (
+      <article className="training-chart-card">
+        <div className="training-chart-head">
+          <div>
+            <strong>{title}</strong>
+            <p className="muted compact-line">{subtitle}</p>
+          </div>
+        </div>
+        <p className="muted compact-line">Training history is not available for this model.</p>
+      </article>
+    );
+  }
+
+  const width = 320;
+  const height = 180;
+  const padding = 18;
+  const allValues = activeSeries.flatMap((item) => item.values);
+  const safeValues = allValues.filter((value) => Number.isFinite(Number(value))).map(Number);
+  const autoMin = safeValues.length ? Math.min(...safeValues) : 0;
+  const autoMax = safeValues.length ? Math.max(...safeValues) : 1;
+  const minValue = domain === "unit" ? 0 : Math.max(0, autoMin - (autoMax - autoMin || 1) * 0.08);
+  const maxValue = domain === "unit" ? 1 : autoMax + (autoMax - autoMin || 1) * 0.08;
+  const tickValues = Array.from({ length: 4 }, (_, index) => {
+    const ratio = index / 3;
+    return maxValue - (maxValue - minValue) * ratio;
+  });
+  const epochCount = Math.max(...activeSeries.map((item) => item.values.length));
+  const usableWidth = width - padding * 2;
+  const epochStep = epochCount > 1 ? usableWidth / (epochCount - 1) : usableWidth;
+  const chartSeries = activeSeries.map((item) => ({
+    ...item,
+    path: buildChartPath(
+      item.values,
+      minValue,
+      maxValue,
+      width,
+      height,
+      padding,
+      epochCount
+    ),
+    points: buildChartPoints(
+      item.values,
+      minValue,
+      maxValue,
+      width,
+      height,
+      padding,
+      epochCount
+    ),
+  }));
+  const hoveredPoints = hoveredEpochIndex === null
+    ? []
+    : chartSeries
+      .map((item) => ({
+        label: item.label,
+        stroke: item.stroke,
+        point: item.points[hoveredEpochIndex] ?? null,
+      }))
+      .filter((item) => item.point);
+  const hoveredGuideX =
+    hoveredEpochIndex === null
+      ? null
+      : epochCount === 1
+        ? width / 2
+        : padding + epochStep * hoveredEpochIndex;
+  const tooltipX =
+    hoveredGuideX === null
+      ? null
+      : Math.min(Math.max(hoveredGuideX, 90), width - 90);
+
+  return (
+    <article className="training-chart-card">
+      <div className="training-chart-head">
+        <div>
+          <strong>{title}</strong>
+          <p className="muted compact-line">{subtitle}</p>
+        </div>
+        <span className="training-chart-badge">
+          {pluralize(epochCount, "epoch")}
+        </span>
+      </div>
+
+      <div className="training-chart-shell">
+        {hoveredEpochIndex !== null && tooltipX !== null ? (
+          <div
+            className="training-chart-tooltip"
+            style={{ left: `${(tooltipX / width) * 100}%` }}
+          >
+            <strong>Epoch {hoveredEpochIndex + 1}</strong>
+            {hoveredPoints.map((item) => (
+              <span key={`${title}-tooltip-${item.label}`}>
+                {item.label}: {formatTrendValue(item.point.value, valueKind)}
+              </span>
+            ))}
+          </div>
+        ) : null}
+        <svg
+          viewBox={`0 0 ${width} ${height}`}
+          className="training-chart-svg"
+          role="img"
+          aria-label={`${title} chart`}
+          onMouseLeave={() => setHoveredEpochIndex(null)}
+        >
+          {tickValues.map((tickValue, index) => {
+            const y =
+              padding + ((height - padding * 2) * index) / (tickValues.length - 1);
+            return (
+              <g key={`${title}-tick-${tickValue}`}>
+                <line
+                  x1={padding}
+                  y1={y}
+                  x2={width - padding}
+                  y2={y}
+                  className="training-chart-grid-line"
+                />
+                <text
+                  x={padding}
+                  y={Math.max(12, y - 4)}
+                  className="training-chart-axis-label"
+                >
+                  {formatTrendValue(tickValue, valueKind)}
+                </text>
+              </g>
+            );
+          })}
+
+          {hoveredGuideX !== null ? (
+            <line
+              x1={hoveredGuideX}
+              y1={padding}
+              x2={hoveredGuideX}
+              y2={height - padding}
+              className="training-chart-guide-line"
+            />
+          ) : null}
+
+          {chartSeries.map((item) => {
+            const lastPoint = item.points.at(-1);
+
+            return (
+              <g key={`${title}-${item.label}`}>
+                <path d={item.path} fill="none" stroke={item.stroke} strokeWidth="3" strokeLinecap="round" />
+                {lastPoint ? (
+                  <circle
+                    cx={lastPoint.x}
+                    cy={lastPoint.y}
+                    r="4.5"
+                    fill={item.stroke}
+                    className="training-chart-point"
+                  />
+                ) : null}
+              </g>
+            );
+          })}
+
+          {hoveredPoints.map((item) => (
+            <circle
+              key={`${title}-active-point-${item.label}`}
+              cx={item.point.x}
+              cy={item.point.y}
+              r="5.5"
+              fill={item.stroke}
+              stroke="rgba(14, 18, 23, 0.95)"
+              strokeWidth="2"
+              className="training-chart-active-point"
+            />
+          ))}
+
+          {Array.from({ length: epochCount }, (_, index) => {
+            const x = epochCount === 1 ? width / 2 : padding + epochStep * index;
+            const rectWidth = epochCount === 1
+              ? usableWidth
+              : index === 0 || index === epochCount - 1
+                ? epochStep / 2
+                : epochStep;
+            const rectX = epochCount === 1
+              ? padding
+              : index === 0
+                ? padding
+                : x - epochStep / 2;
+
+            return (
+              <rect
+                key={`${title}-hover-${index}`}
+                x={rectX}
+                y={padding}
+                width={rectWidth}
+                height={height - padding * 2}
+                className="training-chart-hit-area"
+                onMouseEnter={() => setHoveredEpochIndex(index)}
+                onFocus={() => setHoveredEpochIndex(index)}
+                onBlur={() => setHoveredEpochIndex((current) => (current === index ? null : current))}
+                tabIndex={0}
+                aria-label={`Epoch ${index + 1}`}
+              />
+            );
+          })}
+        </svg>
+      </div>
+
+      <div className="training-chart-legend">
+        {activeSeries.map((item) => {
+          const finalValue = item.values.at(-1);
+          const bestValue = valueKind === "percent"
+            ? Math.max(...item.values.map(Number))
+            : Math.min(...item.values.map(Number));
+
+          return (
+            <div className="training-chart-legend-item" key={`${title}-legend-${item.label}`}>
+              <span className="training-chart-swatch" style={{ background: item.stroke }} />
+              <div>
+                <strong>{item.label}</strong>
+                <span>
+                  Final {formatTrendValue(finalValue, valueKind)} | Best {formatTrendValue(bestValue, valueKind)}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </article>
+  );
+}
+
+function TrainingDistributionChart({ labels }) {
+  const safeLabels = (labels ?? [])
+    .filter((label) => label && Number.isFinite(Number(label.image_count)))
+    .map((label) => ({
+      name: label.name || "Unknown",
+      imageCount: Number(label.image_count),
+    }));
+
+  if (!safeLabels.length) {
+    return (
+      <article className="training-chart-card">
+        <div className="training-chart-head">
+          <div>
+            <strong>Class balance</strong>
+            <p className="muted compact-line">Image counts used for the selected model.</p>
+          </div>
+        </div>
+        <p className="muted compact-line">Per-label counts were not saved for this run.</p>
+      </article>
+    );
+  }
+
+  const maxCount = Math.max(...safeLabels.map((label) => label.imageCount), 1);
+  const totalCount = safeLabels.reduce((sum, label) => sum + label.imageCount, 0);
+  let accumulatedShare = 0;
+  const chartLabels = safeLabels.map((label, index) => {
+    const share = totalCount > 0 ? label.imageCount / totalCount : 0;
+    const startShare = accumulatedShare;
+    accumulatedShare += share;
+    return {
+      ...label,
+      share,
+      color: VISUALIZATION_SWATCHES[index % VISUALIZATION_SWATCHES.length],
+      startShare,
+      endShare: accumulatedShare,
+    };
+  });
+  const donutGradient = chartLabels
+    .map((label) => (
+      `${label.color} ${(label.startShare * 100).toFixed(2)}% ${(label.endShare * 100).toFixed(2)}%`
+    ))
+    .join(", ");
+
+  return (
+    <article className="training-chart-card training-distribution-card">
+      <div className="training-chart-head">
+        <div>
+          <strong>Class balance</strong>
+          <p className="muted compact-line">Image counts used for the selected model.</p>
+        </div>
+        <span className="training-chart-badge">
+          {pluralize(safeLabels.length, "label")}
+        </span>
+      </div>
+
+      <div className="training-distribution-layout">
+        <div className="training-distribution-overview">
+          <div className="training-distribution-donut-wrap">
+            <div
+              className="training-distribution-donut"
+              style={{ backgroundImage: `conic-gradient(${donutGradient})` }}
+              aria-hidden="true"
+            >
+              <div className="training-distribution-donut-center">
+                <strong>{totalCount}</strong>
+                <span>images</span>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className="training-distribution-overview-copy"
+          >
+            <strong>{pluralize(totalCount, "image")}</strong>
+            <span>The donut shows each label&apos;s share of the dataset used for this model.</span>
+          </div>
+        </div>
+
+        <div className="training-distribution-list">
+          {chartLabels.map((label) => (
+          <div className="training-distribution-row" key={`distribution-${label.name}`}>
+            <div className="training-distribution-copy">
+              <strong>{label.name}</strong>
+              <span>{formatConfidence(label.share)}</span>
+            </div>
+            <div className="training-distribution-meter" aria-hidden="true">
+              <div
+                className="training-distribution-fill"
+                style={{
+                  width: `${Math.max((label.imageCount / maxCount) * 100, 8)}%`,
+                  background: label.color,
+                }}
+              />
+            </div>
+            <span className="training-distribution-count">{pluralize(label.imageCount, "image")}</span>
+          </div>
+        ))}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function PerClassAccuracyTable({ evaluation }) {
+  const rows = Array.isArray(evaluation?.per_class_accuracy)
+    ? evaluation.per_class_accuracy.filter(
+      (row) => row && (Number.isFinite(Number(row.sample_count)) || Number.isFinite(Number(row.accuracy)))
+    )
+    : [];
+
+  if (!rows.length) {
+    return (
+      <article className="training-chart-card">
+        <div className="training-chart-head">
+          <div>
+            <strong>Per-class accuracy</strong>
+            <p className="muted compact-line">Validation accuracy for each class.</p>
+          </div>
+        </div>
+        <p className="muted compact-line">
+          Per-class validation accuracy is not available for this model yet.
+        </p>
+      </article>
+    );
+  }
+
+  return (
+    <article className="training-chart-card training-accuracy-table-card">
+      <div className="training-chart-head">
+        <div>
+          <strong>Per-class accuracy</strong>
+          <p className="muted compact-line">Validation accuracy and sample counts by class.</p>
+        </div>
+        <span className="training-chart-badge">
+          {pluralize(evaluation?.validation_sample_count ?? 0, "sample")}
+        </span>
+      </div>
+
+      <div className="training-accuracy-table-wrap">
+        <table className="training-accuracy-table">
+          <thead>
+            <tr>
+              <th>Class</th>
+              <th>Accuracy</th>
+              <th># Samples</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, index) => (
+              <tr key={`class-accuracy-${row.class_name}`}>
+                <td>
+                  <span className="training-accuracy-class">
+                    <span
+                      className="training-chart-swatch training-accuracy-swatch"
+                      style={{ background: VISUALIZATION_SWATCHES[index % VISUALIZATION_SWATCHES.length] }}
+                    />
+                    <span>{row.class_name || "Unknown"}</span>
+                  </span>
+                </td>
+                <td>{formatMetricDecimal(row.accuracy)}</td>
+                <td>{Number.isFinite(Number(row.sample_count)) ? row.sample_count : "--"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </article>
+  );
+}
+
+function ConfusionMatrixChart({ evaluation }) {
+  const matrix = evaluation?.confusion_matrix;
+  const labels = Array.isArray(matrix?.labels)
+    ? matrix.labels
+      .map((label) => String(label ?? "").trim())
+      .filter(Boolean)
+    : [];
+  const rawCounts = Array.isArray(matrix?.counts) ? matrix.counts : [];
+  const hasSquareMatrix =
+    labels.length > 0
+    && rawCounts.length === labels.length
+    && rawCounts.every(
+      (row) => Array.isArray(row) && row.length === labels.length
+    );
+
+  if (!hasSquareMatrix) {
+    return (
+      <article className="training-chart-card training-confusion-card">
+        <div className="training-chart-head">
+          <div>
+            <strong>Confusion matrix</strong>
+            <p className="muted compact-line">Rows are true labels. Columns are predicted labels.</p>
+          </div>
+        </div>
+        <p className="muted compact-line">
+          Confusion matrix data is not available for this model yet.
+        </p>
+      </article>
+    );
+  }
+
+  const counts = rawCounts.map((row) => row.map((value) => {
+    const numericValue = Number(value);
+    if (!Number.isFinite(numericValue) || numericValue < 0) {
+      return 0;
+    }
+    return Math.round(numericValue);
+  }));
+  const rowTotals = counts.map((row) => row.reduce((sum, value) => sum + value, 0));
+  const totalSamples = rowTotals.reduce((sum, value) => sum + value, 0);
+  const maxCellCount = Math.max(1, ...counts.flat());
+
+  return (
+    <article className="training-chart-card training-confusion-card">
+      <div className="training-chart-head">
+        <div>
+          <strong>Confusion matrix</strong>
+          <p className="muted compact-line">Rows are true labels. Columns are predicted labels.</p>
+        </div>
+        <span className="training-chart-badge">
+          {pluralize(totalSamples, "sample")}
+        </span>
+      </div>
+
+      <div className="training-confusion-wrap">
+        <table className="training-confusion-table">
+          <thead>
+            <tr>
+              <th className="training-confusion-corner">True \ Pred</th>
+              {labels.map((label) => (
+                <th key={`confusion-pred-${label}`}>{label}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {counts.map((row, rowIndex) => (
+              <tr key={`confusion-row-${labels[rowIndex]}-${rowIndex}`}>
+                <th>{labels[rowIndex]}</th>
+                {row.map((count, columnIndex) => {
+                  const rowTotal = rowTotals[rowIndex];
+                  const rowShare = rowTotal > 0 ? count / rowTotal : 0;
+                  const intensity = count / maxCellCount;
+                  const isDiagonal = rowIndex === columnIndex;
+                  const opacityBase = isDiagonal ? 0.2 : 0.08;
+                  const opacityRange = isDiagonal ? 0.48 : 0.28;
+                  const tint = isDiagonal ? "89, 206, 182" : "122, 167, 255";
+                  const cellStyle = {
+                    backgroundColor: `rgba(${tint}, ${Math.min(opacityBase + intensity * opacityRange, 0.72)})`,
+                  };
+
+                  return (
+                    <td
+                      key={`confusion-cell-${rowIndex}-${columnIndex}`}
+                      style={cellStyle}
+                      className={isDiagonal ? "diagonal" : ""}
+                    >
+                      <strong>{count}</strong>
+                      <span>{rowTotal > 0 ? formatConfidence(rowShare) : "--"}</span>
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </article>
+  );
 }
 
 async function readErrorMessage(response) {
@@ -1829,6 +2421,56 @@ export default function App() {
   const activePrediction = classification?.top_prediction ?? null;
   const selectedModelMeta =
     models.find((model) => model.name === selectedModel) ?? classification?.model ?? null;
+  const selectedModelHistory = selectedModelMeta?.history ?? {};
+  const selectedModelAccuracySeries = Array.isArray(selectedModelHistory.accuracy)
+    ? selectedModelHistory.accuracy
+    : [];
+  const selectedModelValAccuracySeries = Array.isArray(selectedModelHistory.val_accuracy)
+    ? selectedModelHistory.val_accuracy
+    : [];
+  const selectedModelLossSeries = Array.isArray(selectedModelHistory.loss)
+    ? selectedModelHistory.loss
+    : [];
+  const selectedModelValLossSeries = Array.isArray(selectedModelHistory.val_loss)
+    ? selectedModelHistory.val_loss
+    : [];
+  const selectedModelEvaluation =
+    selectedModelMeta && typeof selectedModelMeta.evaluation === "object"
+      ? selectedModelMeta.evaluation
+      : null;
+  const selectedModelEpochs = Number(selectedModelHistory.epochs)
+    || Math.max(
+      selectedModelAccuracySeries.length,
+      selectedModelValAccuracySeries.length,
+      selectedModelLossSeries.length,
+      selectedModelValLossSeries.length,
+      0
+    );
+  const selectedModelDatasetLabels = Array.isArray(selectedModelMeta?.dataset_labels)
+    ? selectedModelMeta.dataset_labels
+    : [];
+  const visualizationSummaryItems = [
+    {
+      label: "Epochs",
+      value: selectedModelEpochs || "--",
+    },
+    {
+      label: "Best val acc",
+      value: Number.isFinite(selectedModelMeta?.accuracy?.val_accuracy_best)
+        ? formatConfidence(selectedModelMeta.accuracy.val_accuracy_best)
+        : "--",
+    },
+    {
+      label: "Final val loss",
+      value: Number.isFinite(selectedModelMeta?.accuracy?.val_loss_final)
+        ? formatTrendValue(selectedModelMeta.accuracy.val_loss_final)
+        : "--",
+    },
+    {
+      label: "Training images",
+      value: selectedModelMeta?.dataset_total_images ?? "--",
+    },
+  ];
   const backendStatus =
     modelsStatus === "error" || datasetFetchState === "error"
       ? "offline"
@@ -2879,6 +3521,73 @@ export default function App() {
               <dd className="meta-line"><ClockIcon /> {formatDuration(selectedModelMeta?.training_duration_seconds)}</dd>
             </div>
           </dl>
+        </article>
+
+        <article className="results-card log-card visualization-card">
+          <p className="panel-label">Training Visualizer</p>
+          <div className="card-header-inline">
+            <div>
+              <h2>{selectedModelMeta?.name || "No active model"}</h2>
+              <p className="muted compact-line">
+                Curves come from the backend training history saved with this model.
+              </p>
+            </div>
+            <div className="visualization-summary-grid">
+              {visualizationSummaryItems.map((item) => (
+                <div className="visualization-summary-card" key={`viz-summary-${item.label}`}>
+                  <span>{item.label}</span>
+                  <strong>{item.value}</strong>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {selectedModelMeta ? (
+            <div className="training-visualizer-grid">
+              <TrainingMetricChart
+                title="Accuracy"
+                subtitle="Training vs validation accuracy per epoch."
+                valueKind="percent"
+                domain="unit"
+                series={[
+                  {
+                    label: "Train",
+                    values: selectedModelAccuracySeries,
+                    stroke: "#7ef0db",
+                  },
+                  {
+                    label: "Validation",
+                    values: selectedModelValAccuracySeries,
+                    stroke: "#ffc16f",
+                  },
+                ]}
+              />
+              <TrainingMetricChart
+                title="Loss"
+                subtitle="Lower is better. Early stopping watches validation loss."
+                valueKind="number"
+                series={[
+                  {
+                    label: "Train",
+                    values: selectedModelLossSeries,
+                    stroke: "#7aa7ff",
+                  },
+                  {
+                    label: "Validation",
+                    values: selectedModelValLossSeries,
+                    stroke: "#ff8a7a",
+                  },
+                ]}
+              />
+              <TrainingDistributionChart labels={selectedModelDatasetLabels} />
+              <PerClassAccuracyTable evaluation={selectedModelEvaluation} />
+              <ConfusionMatrixChart evaluation={selectedModelEvaluation} />
+            </div>
+          ) : (
+            <p className="muted">
+              Train or select a model to view its saved accuracy, loss, and class-balance charts.
+            </p>
+          )}
         </article>
 
         <article className="results-card log-card">

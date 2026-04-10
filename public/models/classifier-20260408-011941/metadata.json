@@ -1,0 +1,74 @@
+{
+  "trained_at": "2026-04-08T01:19:45.625016",
+  "class_names": [
+    "christmas mug",
+    "surprise mug",
+    "wojtek"
+  ],
+  "dataset": {
+    "data_dir": "C:\\Users\\Wojo\\Documents\\Projects\\vision-ai\\training\\images",
+    "label_count": 3,
+    "total_images": 12,
+    "labels": [
+      {
+        "name": "christmas mug",
+        "directory": "C:\\Users\\Wojo\\Documents\\Projects\\vision-ai\\training\\images\\christmas mug",
+        "image_count": 3,
+        "images": [
+          "christmas mug/20260408-005405-019669.jpg",
+          "christmas mug/20260408-005411-660896.jpg",
+          "christmas mug/20260408-005412-922838.jpg"
+        ]
+      },
+      {
+        "name": "surprise mug",
+        "directory": "C:\\Users\\Wojo\\Documents\\Projects\\vision-ai\\training\\images\\surprise mug",
+        "image_count": 3,
+        "images": [
+          "surprise mug/20260408-005427-445432.jpg",
+          "surprise mug/20260408-005428-163073.jpg",
+          "surprise mug/20260408-005428-635736.jpg"
+        ]
+      },
+      {
+        "name": "wojtek",
+        "directory": "C:\\Users\\Wojo\\Documents\\Projects\\vision-ai\\training\\images\\wojtek",
+        "image_count": 6,
+        "images": [
+          "wojtek/20260408-005434-868838.jpg",
+          "wojtek/20260408-005435-384694.jpg",
+          "wojtek/20260408-005435-827029.jpg",
+          "wojtek/20260408-011827-329150.jpg",
+          "wojtek/20260408-011828-370700.jpg",
+          "wojtek/20260408-011829-232684.jpg"
+        ]
+      }
+    ],
+    "fingerprint": "1968270a410d39043f3e68c257a0c653d22e0fb4e0e8430baf9484d1b3923510",
+    "has_images": true,
+    "has_multiple_labels": true
+  },
+  "config": {
+    "data_dir": "C:\\Users\\Wojo\\Documents\\Projects\\vision-ai\\training\\images",
+    "models_dir": "C:\\Users\\Wojo\\Documents\\Projects\\vision-ai\\models",
+    "epochs": 15,
+    "batch_size": 32,
+    "image_size": 180,
+    "seed": 123,
+    "validation_split": 0.2,
+    "learning_rate": 0.001,
+    "export_name": null
+  },
+  "artifacts": {
+    "classifier": "C:\\Users\\Wojo\\Documents\\Projects\\vision-ai\\models\\classifier-20260408-011941\\classifier.keras",
+    "best_checkpoint": "C:\\Users\\Wojo\\Documents\\Projects\\vision-ai\\models\\classifier-20260408-011941\\best.keras",
+    "labels": "C:\\Users\\Wojo\\Documents\\Projects\\vision-ai\\models\\classifier-20260408-011941\\labels.json",
+    "history": "C:\\Users\\Wojo\\Documents\\Projects\\vision-ai\\models\\classifier-20260408-011941\\history.json"
+  },
+  "final_metrics": {
+    "accuracy": 0.5,
+    "loss": 1.0589876174926758,
+    "val_accuracy": 0.5,
+    "val_loss": 1.260211706161499
+  }
+}

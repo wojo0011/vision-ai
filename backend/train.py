@@ -16,6 +16,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DATA_DIR = PROJECT_ROOT / "training" / "images"
 DEFAULT_MODELS_DIR = PROJECT_ROOT / "models"
 AUTOTUNE = tf.data.AUTOTUNE
+EVALUATION_FILENAME = "evaluation.json"
+EVALUATION_VERSION = 3
 
 
 @dataclass(frozen=True)
@@ -182,6 +184,77 @@ def write_json(path: Path, payload: object) -> None:
     path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
 
+def summarize_per_class_accuracy(
+    model: keras.Model,
+    val_ds: tf.data.Dataset,
+    class_names: list[str],
+) -> dict[str, object]:
+    total_counts = [0] * len(class_names)
+    correct_counts = [0] * len(class_names)
+    confusion_counts = [[0] * len(class_names) for _ in class_names]
+
+    for images, labels in val_ds:
+        predictions = model(images, training=False)
+        predicted_labels = tf.argmax(predictions, axis=1, output_type=tf.int32).numpy().tolist()
+        true_labels = tf.cast(labels, tf.int32).numpy().tolist()
+
+        for true_label, predicted_label in zip(true_labels, predicted_labels):
+            class_index = int(true_label)
+            predicted_index = int(predicted_label)
+            if class_index < 0 or class_index >= len(class_names):
+                continue
+            total_counts[class_index] += 1
+            if 0 <= predicted_index < len(class_names):
+                confusion_counts[class_index][predicted_index] += 1
+            if predicted_index == class_index:
+                correct_counts[class_index] += 1
+
+    per_class_accuracy = []
+    for index, class_name in enumerate(class_names):
+        sample_count = total_counts[index]
+        accuracy = (
+            correct_counts[index] / sample_count
+            if sample_count
+            else None
+        )
+        per_class_accuracy.append(
+            {
+                "class_name": class_name,
+                "accuracy": float(accuracy) if accuracy is not None else None,
+                "sample_count": sample_count,
+                "correct_count": correct_counts[index],
+            }
+        )
+
+    total_samples = sum(total_counts)
+    total_correct = sum(correct_counts)
+    overall_accuracy = (
+        total_correct / total_samples
+        if total_samples
+        else None
+    )
+    predicted_totals = [
+        sum(confusion_counts[row_index][column_index] for row_index in range(len(class_names)))
+        for column_index in range(len(class_names))
+    ]
+
+    return {
+        "version": EVALUATION_VERSION,
+        "split_source": "keras.image_dataset_from_directory",
+        "shuffle": True,
+        "validation_sample_count": total_samples,
+        "validation_correct_count": total_correct,
+        "validation_accuracy": float(overall_accuracy) if overall_accuracy is not None else None,
+        "per_class_accuracy": per_class_accuracy,
+        "confusion_matrix": {
+            "labels": [str(class_name) for class_name in class_names],
+            "counts": confusion_counts,
+            "row_totals": total_counts,
+            "column_totals": predicted_totals,
+        },
+    }
+
+
 def train(config: TrainConfig, dataset_summary: dict[str, object] | None = None) -> Path:
     validate_inputs(config)
     config.models_dir.mkdir(parents=True, exist_ok=True)
@@ -226,11 +299,14 @@ def train(config: TrainConfig, dataset_summary: dict[str, object] | None = None)
     classifier_path = run_dir / "classifier.keras"
     labels_path = run_dir / "labels.json"
     history_path = run_dir / "history.json"
+    evaluation_path = run_dir / "evaluation.json"
     metadata_path = run_dir / "metadata.json"
+    evaluation_summary = summarize_per_class_accuracy(model, val_ds, class_names)
 
     model.save(classifier_path)
     write_json(labels_path, class_names)
     write_json(history_path, history.history)
+    write_json(evaluation_path, evaluation_summary)
     write_json(
         metadata_path,
         {
@@ -248,10 +324,12 @@ def train(config: TrainConfig, dataset_summary: dict[str, object] | None = None)
                 "best_checkpoint": str(run_dir / "best.keras"),
                 "labels": str(labels_path),
                 "history": str(history_path),
+                "evaluation": str(evaluation_path),
             },
             "final_metrics": {
                 key: float(values[-1]) for key, values in history.history.items() if values
             },
+            "evaluation": evaluation_summary,
         },
     )
 

@@ -9,6 +9,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 
@@ -18,6 +19,8 @@ CLASSIFIER_FILENAME = "classifier.keras"
 LABELS_FILENAME = "labels.json"
 METADATA_FILENAME = "metadata.json"
 HISTORY_FILENAME = "history.json"
+EVALUATION_FILENAME = "evaluation.json"
+EVALUATION_VERSION = 3
 
 
 class InferenceError(RuntimeError):
@@ -66,6 +69,295 @@ def _safe_read_json(path: Path | None) -> dict[str, Any]:
         raise InferenceError(f"Invalid JSON in {path}") from exc
 
 
+def _safe_write_json(path: Path, payload: object) -> None:
+    try:
+        path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    except OSError:
+        # Serialization should still succeed even if we cannot persist the cache file.
+        pass
+
+
+def _series_metric(values: Any) -> list[float]:
+    if not isinstance(values, list) or not values:
+        return []
+
+    series: list[float] = []
+    for value in values:
+        try:
+            series.append(float(value))
+        except (TypeError, ValueError):
+            continue
+    return series
+
+
+def _has_confusion_matrix(evaluation: Any) -> bool:
+    if not isinstance(evaluation, dict):
+        return False
+
+    confusion_matrix = evaluation.get("confusion_matrix")
+    if not isinstance(confusion_matrix, dict):
+        return False
+
+    labels = confusion_matrix.get("labels")
+    counts = confusion_matrix.get("counts")
+    if not isinstance(labels, list) or not isinstance(counts, list) or not labels:
+        return False
+
+    if len(labels) != len(counts):
+        return False
+
+    for row in counts:
+        if not isinstance(row, list) or len(row) != len(labels):
+            return False
+        for value in row:
+            try:
+                numeric_value = float(value)
+            except (TypeError, ValueError):
+                return False
+            if not numeric_value.is_integer() or numeric_value < 0:
+                return False
+
+    return True
+
+
+def _summarize_per_class_accuracy(
+    model: keras.Model,
+    val_ds: tf.data.Dataset,
+    class_names: list[str],
+) -> dict[str, Any]:
+    total_counts = [0] * len(class_names)
+    correct_counts = [0] * len(class_names)
+    confusion_counts = [[0] * len(class_names) for _ in class_names]
+
+    for images, labels in val_ds:
+        predictions = model(images, training=False)
+        predicted_labels = tf.argmax(predictions, axis=1, output_type=tf.int32).numpy().tolist()
+        true_labels = tf.cast(labels, tf.int32).numpy().tolist()
+
+        for true_label, predicted_label in zip(true_labels, predicted_labels):
+            class_index = int(true_label)
+            predicted_index = int(predicted_label)
+            if class_index < 0 or class_index >= len(class_names):
+                continue
+            total_counts[class_index] += 1
+            if 0 <= predicted_index < len(class_names):
+                confusion_counts[class_index][predicted_index] += 1
+            if predicted_index == class_index:
+                correct_counts[class_index] += 1
+
+    per_class_accuracy = []
+    for index, class_name in enumerate(class_names):
+        sample_count = total_counts[index]
+        accuracy = correct_counts[index] / sample_count if sample_count else None
+        per_class_accuracy.append(
+            {
+                "class_name": class_name,
+                "accuracy": float(accuracy) if accuracy is not None else None,
+                "sample_count": sample_count,
+                "correct_count": correct_counts[index],
+            }
+        )
+
+    total_samples = sum(total_counts)
+    total_correct = sum(correct_counts)
+    validation_accuracy = total_correct / total_samples if total_samples else None
+    predicted_totals = [
+        sum(confusion_counts[row_index][column_index] for row_index in range(len(class_names)))
+        for column_index in range(len(class_names))
+    ]
+
+    return {
+        "version": EVALUATION_VERSION,
+        "split_source": "keras.image_dataset_from_directory",
+        "shuffle": True,
+        "validation_sample_count": total_samples,
+        "validation_correct_count": total_correct,
+        "validation_accuracy": float(validation_accuracy) if validation_accuracy is not None else None,
+        "per_class_accuracy": per_class_accuracy,
+        "confusion_matrix": {
+            "labels": [str(class_name) for class_name in class_names],
+            "counts": confusion_counts,
+            "row_totals": total_counts,
+            "column_totals": predicted_totals,
+        },
+    }
+
+
+def _resolve_evaluation(record: ModelRecord, metadata: dict[str, Any]) -> dict[str, Any]:
+    evaluation_path = record.run_dir / EVALUATION_FILENAME
+    evaluation = _safe_read_json(evaluation_path if evaluation_path.exists() else None)
+    metadata_evaluation = metadata.get("evaluation")
+    legacy_fallback: dict[str, Any] = {}
+    if isinstance(evaluation, dict) and evaluation.get("per_class_accuracy"):
+        legacy_fallback = evaluation
+    elif isinstance(metadata_evaluation, dict) and metadata_evaluation.get("per_class_accuracy"):
+        legacy_fallback = metadata_evaluation
+
+    if (
+        isinstance(evaluation, dict)
+        and evaluation.get("version") == EVALUATION_VERSION
+        and evaluation.get("per_class_accuracy")
+        and _has_confusion_matrix(evaluation)
+    ):
+        return evaluation
+
+    if (
+        isinstance(metadata_evaluation, dict)
+        and metadata_evaluation.get("version") == EVALUATION_VERSION
+        and metadata_evaluation.get("per_class_accuracy")
+        and _has_confusion_matrix(metadata_evaluation)
+    ):
+        if (
+            not evaluation_path.exists()
+            or evaluation.get("version") != EVALUATION_VERSION
+            or not _has_confusion_matrix(evaluation)
+        ):
+            _safe_write_json(evaluation_path, metadata_evaluation)
+        return metadata_evaluation
+
+    config = metadata.get("config", {})
+    class_names = metadata.get("class_names")
+    if not isinstance(config, dict) or not isinstance(class_names, list) or not class_names:
+        return legacy_fallback
+
+    data_dir_value = config.get("data_dir")
+    if not data_dir_value:
+        return legacy_fallback
+
+    data_dir = Path(str(data_dir_value)).expanduser()
+    if not data_dir.exists():
+        return legacy_fallback
+
+    try:
+        validation_split = float(config.get("validation_split", 0.2))
+        seed = int(config.get("seed", 123))
+        image_size = int(config.get("image_size", 180))
+        batch_size = int(config.get("batch_size", 32))
+    except (TypeError, ValueError):
+        return legacy_fallback
+
+    dataset_info = metadata.get("dataset")
+    if not isinstance(dataset_info, dict):
+        return legacy_fallback
+
+    try:
+        sample_paths: list[Path] = []
+        sample_labels: list[int] = []
+        class_index_by_name = {
+            str(class_name): index for index, class_name in enumerate(class_names)
+        }
+
+        for label_info in dataset_info.get("labels", []):
+            if not isinstance(label_info, dict):
+                continue
+            class_name = str(label_info.get("name", ""))
+            if class_name not in class_index_by_name:
+                continue
+            label_index = class_index_by_name[class_name]
+            for relative_path in label_info.get("images", []):
+                sample_paths.append(data_dir / str(relative_path))
+                sample_labels.append(label_index)
+
+        if not sample_paths:
+            return legacy_fallback
+
+        rng = np.random.RandomState(seed)
+        sample_paths = list(sample_paths)
+        sample_labels = list(sample_labels)
+        rng.shuffle(sample_paths)
+        rng = np.random.RandomState(seed)
+        rng.shuffle(sample_labels)
+
+        num_val_samples = int(validation_split * len(sample_paths))
+        if num_val_samples <= 0:
+            return legacy_fallback
+
+        validation_paths = sample_paths[-num_val_samples:]
+        validation_labels = sample_labels[-num_val_samples:]
+        model = _load_model_from_path(str(record.classifier_path))
+
+        total_counts = [0] * len(class_names)
+        correct_counts = [0] * len(class_names)
+        confusion_counts = [[0] * len(class_names) for _ in class_names]
+
+        for batch_start in range(0, len(validation_paths), batch_size):
+            batch_paths = validation_paths[batch_start: batch_start + batch_size]
+            batch_labels = validation_labels[batch_start: batch_start + batch_size]
+            batch_images = []
+
+            for image_path in batch_paths:
+                image_bytes = tf.io.read_file(str(image_path))
+                image = tf.io.decode_image(
+                    image_bytes,
+                    channels=3,
+                    expand_animations=False,
+                )
+                image.set_shape([None, None, 3])
+                batch_images.append(
+                    tf.image.resize(image, (image_size, image_size))
+                )
+
+            if not batch_images:
+                continue
+
+            batch_tensor = tf.cast(tf.stack(batch_images, axis=0), tf.float32)
+            predictions = model(batch_tensor, training=False)
+            predicted_labels = tf.argmax(
+                predictions, axis=1, output_type=tf.int32
+            ).numpy().tolist()
+
+            for true_label, predicted_label in zip(batch_labels, predicted_labels):
+                class_index = int(true_label)
+                predicted_index = int(predicted_label)
+                if class_index < 0 or class_index >= len(class_names):
+                    continue
+                total_counts[class_index] += 1
+                if 0 <= predicted_index < len(class_names):
+                    confusion_counts[class_index][predicted_index] += 1
+                if predicted_index == class_index:
+                    correct_counts[class_index] += 1
+
+        per_class_accuracy = []
+        for index, class_name in enumerate(class_names):
+            sample_count = total_counts[index]
+            accuracy = correct_counts[index] / sample_count if sample_count else None
+            per_class_accuracy.append(
+                {
+                    "class_name": str(class_name),
+                    "accuracy": float(accuracy) if accuracy is not None else None,
+                    "sample_count": sample_count,
+                    "correct_count": correct_counts[index],
+                }
+            )
+
+        total_samples = sum(total_counts)
+        total_correct = sum(correct_counts)
+        validation_accuracy = total_correct / total_samples if total_samples else None
+        predicted_totals = [
+            sum(confusion_counts[row_index][column_index] for row_index in range(len(class_names)))
+            for column_index in range(len(class_names))
+        ]
+        evaluation = {
+            "version": EVALUATION_VERSION,
+            "split_source": "keras.image_dataset_from_directory",
+            "shuffle": True,
+            "validation_sample_count": total_samples,
+            "validation_correct_count": total_correct,
+            "validation_accuracy": float(validation_accuracy) if validation_accuracy is not None else None,
+            "per_class_accuracy": per_class_accuracy,
+            "confusion_matrix": {
+                "labels": [str(class_name) for class_name in class_names],
+                "counts": confusion_counts,
+                "row_totals": total_counts,
+                "column_totals": predicted_totals,
+            },
+        }
+        _safe_write_json(evaluation_path, evaluation)
+        return evaluation
+    except Exception:
+        return legacy_fallback
+
+
 def list_available_models(models_dir: Path | None = None) -> list[ModelRecord]:
     base_dir = (models_dir or resolve_models_dir()).resolve()
     if not base_dir.exists():
@@ -110,6 +402,7 @@ def serialize_model_record(record: ModelRecord) -> dict[str, Any]:
     metadata = _safe_read_json(record.metadata_path)
     history_path = record.run_dir / HISTORY_FILENAME
     history = _safe_read_json(history_path if history_path.exists() else None)
+    evaluation = _resolve_evaluation(record, metadata)
 
     def _best_metric(values: Any) -> float | None:
         if not isinstance(values, list) or not values:
@@ -143,6 +436,18 @@ def serialize_model_record(record: ModelRecord) -> dict[str, Any]:
         "train_loss_final": _latest_metric(history.get("loss")),
         "val_loss_final": _latest_metric(history.get("val_loss")),
     }
+    history_summary = {
+        "epochs": max(
+            len(_series_metric(history.get("accuracy"))),
+            len(_series_metric(history.get("val_accuracy"))),
+            len(_series_metric(history.get("loss"))),
+            len(_series_metric(history.get("val_loss"))),
+        ),
+        "accuracy": _series_metric(history.get("accuracy")),
+        "val_accuracy": _series_metric(history.get("val_accuracy")),
+        "loss": _series_metric(history.get("loss")),
+        "val_loss": _series_metric(history.get("val_loss")),
+    }
 
     model_type = metadata.get("model_type")
     if not model_type:
@@ -164,6 +469,8 @@ def serialize_model_record(record: ModelRecord) -> dict[str, Any]:
         "run_size_bytes": run_size_bytes,
         "model_type": model_type,
         "accuracy": accuracy_summary,
+        "history": history_summary,
+        "evaluation": evaluation,
         "classifier_path": str(record.classifier_path),
     }
 
