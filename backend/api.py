@@ -8,7 +8,10 @@ from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
+from dotenv import load_dotenv
 
+from .jira_rag.service import jira_rag_service
+from .jira_rag.schemas import JiraChatRequest, JiraChatResponse, JiraProjectOption, JiraSyncRequest, JiraSyncResponse
 from .dataset import (
     DatasetError,
     delete_training_image,
@@ -31,7 +34,15 @@ from .training_service import get_dataset_status, start_training_job
 from .tfjs_service import get_tfjs_state, start_tfjs_conversion
 import uuid
 
+load_dotenv()
+
 logger = logging.getLogger(__name__)
+
+if not logging.getLogger().handlers:
+    logging.basicConfig(
+        level=os.getenv("LOG_LEVEL", "INFO").upper(),
+        format="%(asctime)s %(levelname)s [%(name)s] %(message)s",
+    )
 
 
 def _cors_origins() -> list[str]:
@@ -41,7 +52,7 @@ def _cors_origins() -> list[str]:
     return [origin.strip() for origin in raw_value.split(",") if origin.strip()]
 
 
-app = FastAPI(title="Vision AI API", version="0.1.0")
+app = FastAPI(title="Vision AI + Jira RAG API", version="0.2.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_cors_origins(),
@@ -74,6 +85,18 @@ def health() -> dict[str, Any]:
     return {
         "status": "ok",
         "models_dir": str(resolve_models_dir()),
+        "jira": jira_rag_service.health(),
+    }
+
+
+@app.get("/health")
+def root_health() -> dict[str, Any]:
+    return {
+        "status": "ok",
+        "vision_ai": {
+            "models_dir": str(resolve_models_dir()),
+        },
+        "jira": jira_rag_service.health(),
     }
 
 
@@ -258,6 +281,39 @@ def convert_tfjs(model_name: str = Query(..., min_length=1)) -> dict[str, Any]:
 @app.get("/api/convert-tfjs/status")
 def convert_tfjs_status() -> dict[str, Any]:
     return get_tfjs_state()
+
+
+@app.post("/jira/sync", response_model=JiraSyncResponse)
+def jira_sync(_payload: JiraSyncRequest) -> JiraSyncResponse:
+    try:
+        return jira_rag_service.sync()
+    except RuntimeError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.exception("Unexpected error while syncing Jira issues")
+        raise HTTPException(status_code=500, detail="Unexpected error while syncing Jira issues.") from exc
+
+
+@app.post("/jira/chat", response_model=JiraChatResponse)
+def jira_chat(payload: JiraChatRequest) -> JiraChatResponse:
+    try:
+        return jira_rag_service.chat(payload.message, payload.top_k, payload.project_keys)
+    except RuntimeError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.exception("Unexpected error while chatting with Jira RAG")
+        raise HTTPException(status_code=500, detail="Unexpected error while chatting with Jira RAG.") from exc
+
+
+@app.get("/jira/projects", response_model=list[JiraProjectOption])
+def jira_projects() -> list[JiraProjectOption]:
+    try:
+        return jira_rag_service.list_projects()
+    except RuntimeError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.exception("Unexpected error while listing Jira projects")
+        raise HTTPException(status_code=500, detail="Unexpected error while listing Jira projects.") from exc
 
 
 def main() -> None:

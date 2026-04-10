@@ -109,6 +109,11 @@ body {
   background: transparent;
 }
 
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
 button,
 select,
 input {
@@ -145,6 +150,484 @@ input {
 
 #root {
   min-height: 100vh;
+}
+
+.routed-shell {
+  padding-top: 1.5rem;
+}
+
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.35rem;
+  background: rgba(14, 18, 23, 0.78);
+  backdrop-filter: blur(16px);
+}
+
+.brand-link {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.top-nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.nav-pill {
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: #d9e1ea;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.nav-pill.active,
+.nav-pill:hover {
+  border-color: rgba(228, 169, 105, 0.55);
+  background: rgba(228, 169, 105, 0.14);
+  color: #fff4e4;
+}
+
+.workspace-shell,
+.jira-page-shell {
+  position: relative;
+  z-index: 1;
+}
+
+.workspace-hero-card,
+.jira-hero-card,
+.jira-chat-card {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(14, 18, 23, 0.72);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.22);
+}
+
+.workspace-hero-card,
+.jira-hero-card {
+  border-radius: 2rem;
+  padding: 2rem;
+}
+
+.workspace-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.workspace-link-card {
+  display: block;
+  padding: 1.2rem;
+  border-radius: 1.35rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.workspace-link-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(89, 206, 182, 0.5);
+  background: rgba(89, 206, 182, 0.1);
+}
+
+.workspace-link-card h2,
+.jira-chat-header h2,
+.jira-hero-card h1 {
+  margin: 0.25rem 0 0.5rem;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.workspace-link-card p {
+  margin: 0;
+  color: #d0d7df;
+}
+
+.jira-hero-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.9fr);
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.jira-hero-actions {
+  display: grid;
+  gap: 1rem;
+}
+
+.jira-status-copy {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  color: #d0d7df;
+}
+
+.jira-status-copy strong {
+  color: #f5f1e8;
+}
+
+.jira-chat-layout {
+  margin-top: 1.5rem;
+}
+
+.jira-chat-card {
+  border-radius: 1.75rem;
+  padding: 1.5rem;
+}
+
+.jira-chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.jira-chat-header-main {
+  min-width: 0;
+}
+
+.jira-project-filter {
+  min-width: min(24rem, 100%);
+  display: grid;
+  gap: 0.65rem;
+  justify-items: stretch;
+}
+
+.jira-project-select {
+  min-width: 18rem;
+}
+
+.jira-project-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.jira-project-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.jira-chip-remove {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #f5f1e8;
+  cursor: pointer;
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.jira-message-list {
+  display: grid;
+  gap: 0.9rem;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 0.3rem;
+}
+
+.jira-message-row {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.jira-message-row.user {
+  justify-content: flex-end;
+}
+
+.jira-message-bubble {
+  width: min(100%, 900px);
+  padding: 1rem 1.1rem;
+  border-radius: 1.2rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.jira-message-bubble.user {
+  background: rgba(89, 206, 182, 0.12);
+  border-color: rgba(89, 206, 182, 0.28);
+}
+
+.jira-message-bubble p,
+.jira-source-card p,
+.jira-source-card strong {
+  margin: 0;
+}
+
+.jira-message-role,
+.jira-sources-title {
+  display: inline-block;
+  margin-bottom: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.7rem;
+  color: #e4a969;
+}
+
+.jira-key-row,
+.jira-sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.8rem;
+}
+
+.jira-sources {
+  flex-direction: column;
+}
+
+.jira-source-card {
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: 1rem;
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.jira-source-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.jira-source-title-block {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.jira-source-title-block h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #f5f1e8;
+}
+
+.jira-source-subtitle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.jira-source-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  color: #b6c0cb;
+  font-size: 0.82rem;
+  justify-content: flex-end;
+}
+
+.jira-ticket-link,
+.jira-source-actions a,
+.jira-message-bubble a {
+  color: #8de6d7;
+  text-decoration: underline;
+  text-decoration-color: rgba(141, 230, 215, 0.5);
+}
+
+.jira-ticket-link:hover,
+.jira-source-actions a:hover,
+.jira-message-bubble a:hover {
+  color: #c6fff4;
+}
+
+.jira-ticket-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.jira-open-link {
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.jira-url-text {
+  display: inline-block;
+  max-width: 100%;
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.45rem;
+  background: rgba(255, 255, 255, 0.06);
+  color: #d7f7ef;
+  font-size: 0.74rem;
+  white-space: normal;
+  word-break: break-all;
+}
+
+.jira-inline-issue {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.jira-source-dates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  color: #b6c0cb;
+  font-size: 0.82rem;
+}
+
+.jira-type-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f5f1e8;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.jira-type-pill.epic {
+  background: rgba(228, 169, 105, 0.16);
+  border-color: rgba(228, 169, 105, 0.4);
+  color: #ffd6a4;
+}
+
+.jira-type-pill.story {
+  background: rgba(89, 206, 182, 0.16);
+  border-color: rgba(89, 206, 182, 0.4);
+  color: #b4fff1;
+}
+
+.jira-type-pill.bug {
+  background: rgba(255, 107, 107, 0.16);
+  border-color: rgba(255, 107, 107, 0.4);
+  color: #ffb3b3;
+}
+
+.jira-type-pill.task {
+  background: rgba(122, 162, 255, 0.16);
+  border-color: rgba(122, 162, 255, 0.4);
+  color: #c9d9ff;
+}
+
+.jira-meta-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f5f1e8;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.jira-meta-pill.todo {
+  background: rgba(122, 162, 255, 0.16);
+  border-color: rgba(122, 162, 255, 0.4);
+  color: #c9d9ff;
+}
+
+.jira-meta-pill.in-progress {
+  background: rgba(89, 206, 182, 0.16);
+  border-color: rgba(89, 206, 182, 0.4);
+  color: #b4fff1;
+}
+
+.jira-meta-pill.review {
+  background: rgba(255, 214, 102, 0.16);
+  border-color: rgba(255, 214, 102, 0.4);
+  color: #ffe7a6;
+}
+
+.jira-meta-pill.blocked {
+  background: rgba(255, 107, 107, 0.16);
+  border-color: rgba(255, 107, 107, 0.4);
+  color: #ffb3b3;
+}
+
+.jira-meta-pill.done {
+  background: rgba(143, 211, 127, 0.16);
+  border-color: rgba(143, 211, 127, 0.4);
+  color: #d3ffb1;
+}
+
+.jira-meta-pill.priority-critical {
+  background: rgba(255, 82, 82, 0.18);
+  border-color: rgba(255, 82, 82, 0.45);
+  color: #ffb6b6;
+}
+
+.jira-meta-pill.priority-high {
+  background: rgba(255, 146, 43, 0.18);
+  border-color: rgba(255, 146, 43, 0.45);
+  color: #ffd1a8;
+}
+
+.jira-meta-pill.priority-medium {
+  background: rgba(255, 214, 102, 0.16);
+  border-color: rgba(255, 214, 102, 0.4);
+  color: #ffe7a6;
+}
+
+.jira-meta-pill.priority-low {
+  background: rgba(120, 207, 255, 0.16);
+  border-color: rgba(120, 207, 255, 0.4);
+  color: #c7efff;
+}
+
+.jira-input-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.jira-chat-input {
+  min-width: 0;
+}
+
+@media (max-width: 840px) {
+  .top-nav {
+    position: static;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .jira-hero-card {
+    grid-template-columns: 1fr;
+  }
+
+  .jira-input-row {
+    grid-template-columns: 1fr;
+  }
+
+  .jira-chat-header {
+    flex-direction: column;
+  }
+
+  .jira-source-header {
+    flex-direction: column;
+  }
+
+  .jira-source-actions {
+    justify-content: flex-start;
+  }
 }
 
 .app-shell {

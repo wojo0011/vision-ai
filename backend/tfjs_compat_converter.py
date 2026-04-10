@@ -31,11 +31,14 @@ def _patch_optional_imports() -> None:
         jax_module = types.ModuleType("jax")
         jax_experimental = types.ModuleType("jax.experimental")
         jax2tf_module = types.ModuleType("jax.experimental.jax2tf")
+        jax_monitoring_module = types.ModuleType("jax.monitoring")
         jax_experimental.jax2tf = jax2tf_module  # type: ignore[attr-defined]
         jax_module.experimental = jax_experimental
+        jax_module.monitoring = jax_monitoring_module  # type: ignore[attr-defined]
         sys.modules["jax"] = jax_module
         sys.modules["jax.experimental"] = jax_experimental
         sys.modules["jax.experimental.jax2tf"] = jax2tf_module
+        sys.modules["jax.monitoring"] = jax_monitoring_module
 
 
 def _read_input_format(args: Sequence[str]) -> str | None:

@@ -1,0 +1,460 @@
+{
+  "training_started_at": "2026-04-09T14:22:33.306109",
+  "trained_at": "2026-04-09T14:22:37.370094",
+  "training_duration_seconds": 4.064,
+  "class_names": [
+    "peanut",
+    "test",
+    "unknow",
+    "wojtek"
+  ],
+  "dataset": {
+    "data_dir": "/Users/womat1/Projects/vision-ai/training/images",
+    "label_count": 4,
+    "total_images": 38,
+    "labels": [
+      {
+        "name": "peanut",
+        "directory": "/Users/womat1/Projects/vision-ai/training/images/peanut",
+        "image_count": 10,
+        "images": [
+          "peanut/20260409-131202-548705.jpg",
+          "peanut/20260409-131203-581242.jpg",
+          "peanut/20260409-131204-629114.jpg",
+          "peanut/20260409-131205-664102.jpg",
+          "peanut/20260409-131206-693571.jpg",
+          "peanut/20260409-131207-730920.jpg",
+          "peanut/20260409-131208-762194.jpg",
+          "peanut/20260409-131209-797341.jpg",
+          "peanut/20260409-131210-830332.jpg",
+          "peanut/20260409-131211-865572.jpg"
+        ],
+        "image_details": [
+          {
+            "label": "peanut",
+            "relative_path": "peanut/20260409-131202-548705.jpg",
+            "captured_at": "2026-04-09T13:12:02.549296",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 70796
+          },
+          {
+            "label": "peanut",
+            "relative_path": "peanut/20260409-131203-581242.jpg",
+            "captured_at": "2026-04-09T13:12:03.582071",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 67323
+          },
+          {
+            "label": "peanut",
+            "relative_path": "peanut/20260409-131204-629114.jpg",
+            "captured_at": "2026-04-09T13:12:04.629570",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 71721
+          },
+          {
+            "label": "peanut",
+            "relative_path": "peanut/20260409-131205-664102.jpg",
+            "captured_at": "2026-04-09T13:12:05.664737",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 70448
+          },
+          {
+            "label": "peanut",
+            "relative_path": "peanut/20260409-131206-693571.jpg",
+            "captured_at": "2026-04-09T13:12:06.694030",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 72381
+          },
+          {
+            "label": "peanut",
+            "relative_path": "peanut/20260409-131207-730920.jpg",
+            "captured_at": "2026-04-09T13:12:07.731377",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 72934
+          },
+          {
+            "label": "peanut",
+            "relative_path": "peanut/20260409-131208-762194.jpg",
+            "captured_at": "2026-04-09T13:12:08.762871",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 63932
+          },
+          {
+            "label": "peanut",
+            "relative_path": "peanut/20260409-131209-797341.jpg",
+            "captured_at": "2026-04-09T13:12:09.797860",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 66112
+          },
+          {
+            "label": "peanut",
+            "relative_path": "peanut/20260409-131210-830332.jpg",
+            "captured_at": "2026-04-09T13:12:10.830756",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 66223
+          },
+          {
+            "label": "peanut",
+            "relative_path": "peanut/20260409-131211-865572.jpg",
+            "captured_at": "2026-04-09T13:12:11.866477",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 68420
+          }
+        ]
+      },
+      {
+        "name": "test",
+        "directory": "/Users/womat1/Projects/vision-ai/training/images/test",
+        "image_count": 3,
+        "images": [
+          "test/20260409-142222-415835.jpg",
+          "test/20260409-142223-507877.jpg",
+          "test/20260409-142224-561312.jpg"
+        ],
+        "image_details": [
+          {
+            "label": "test",
+            "relative_path": "test/20260409-142222-415835.jpg",
+            "captured_at": "2026-04-09T14:22:22.417268",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 66689
+          },
+          {
+            "label": "test",
+            "relative_path": "test/20260409-142223-507877.jpg",
+            "captured_at": "2026-04-09T14:22:23.508452",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 66549
+          },
+          {
+            "label": "test",
+            "relative_path": "test/20260409-142224-561312.jpg",
+            "captured_at": "2026-04-09T14:22:24.561932",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 66108
+          }
+        ]
+      },
+      {
+        "name": "unknow",
+        "directory": "/Users/womat1/Projects/vision-ai/training/images/unknow",
+        "image_count": 15,
+        "images": [
+          "unknow/20260409-131108-061086.jpg",
+          "unknow/20260409-131109-096036.jpg",
+          "unknow/20260409-131110-130341.jpg",
+          "unknow/20260409-131111-164104.jpg",
+          "unknow/20260409-131112-196128.jpg",
+          "unknow/20260409-131113-231773.jpg",
+          "unknow/20260409-131114-263165.jpg",
+          "unknow/20260409-131115-298411.jpg",
+          "unknow/20260409-131116-331247.jpg",
+          "unknow/20260409-131117-513135.jpg",
+          "unknow/20260409-131118-546789.jpg",
+          "unknow/20260409-131119-578975.jpg",
+          "unknow/20260409-131120-613418.jpg",
+          "unknow/20260409-131121-646401.jpg",
+          "unknow/20260409-131122-680785.jpg"
+        ],
+        "image_details": [
+          {
+            "label": "unknow",
+            "relative_path": "unknow/20260409-131108-061086.jpg",
+            "captured_at": "2026-04-09T13:11:08.061536",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 62282
+          },
+          {
+            "label": "unknow",
+            "relative_path": "unknow/20260409-131109-096036.jpg",
+            "captured_at": "2026-04-09T13:11:09.097000",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 61788
+          },
+          {
+            "label": "unknow",
+            "relative_path": "unknow/20260409-131110-130341.jpg",
+            "captured_at": "2026-04-09T13:11:10.130955",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 60862
+          },
+          {
+            "label": "unknow",
+            "relative_path": "unknow/20260409-131111-164104.jpg",
+            "captured_at": "2026-04-09T13:11:11.164525",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 61034
+          },
+          {
+            "label": "unknow",
+            "relative_path": "unknow/20260409-131112-196128.jpg",
+            "captured_at": "2026-04-09T13:11:12.196588",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 60667
+          },
+          {
+            "label": "unknow",
+            "relative_path": "unknow/20260409-131113-231773.jpg",
+            "captured_at": "2026-04-09T13:11:13.232376",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 60599
+          },
+          {
+            "label": "unknow",
+            "relative_path": "unknow/20260409-131114-263165.jpg",
+            "captured_at": "2026-04-09T13:11:14.263588",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 60869
+          },
+          {
+            "label": "unknow",
+            "relative_path": "unknow/20260409-131115-298411.jpg",
+            "captured_at": "2026-04-09T13:11:15.298914",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 60478
+          },
+          {
+            "label": "unknow",
+            "relative_path": "unknow/20260409-131116-331247.jpg",
+            "captured_at": "2026-04-09T13:11:16.331847",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 60585
+          },
+          {
+            "label": "unknow",
+            "relative_path": "unknow/20260409-131117-513135.jpg",
+            "captured_at": "2026-04-09T13:11:17.513555",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 60238
+          },
+          {
+            "label": "unknow",
+            "relative_path": "unknow/20260409-131118-546789.jpg",
+            "captured_at": "2026-04-09T13:11:18.547226",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 60808
+          },
+          {
+            "label": "unknow",
+            "relative_path": "unknow/20260409-131119-578975.jpg",
+            "captured_at": "2026-04-09T13:11:19.579638",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 60358
+          },
+          {
+            "label": "unknow",
+            "relative_path": "unknow/20260409-131120-613418.jpg",
+            "captured_at": "2026-04-09T13:11:20.613902",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 60374
+          },
+          {
+            "label": "unknow",
+            "relative_path": "unknow/20260409-131121-646401.jpg",
+            "captured_at": "2026-04-09T13:11:21.646854",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 60501
+          },
+          {
+            "label": "unknow",
+            "relative_path": "unknow/20260409-131122-680785.jpg",
+            "captured_at": "2026-04-09T13:11:22.681427",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 60646
+          }
+        ]
+      },
+      {
+        "name": "wojtek",
+        "directory": "/Users/womat1/Projects/vision-ai/training/images/wojtek",
+        "image_count": 10,
+        "images": [
+          "wojtek/20260409-131037-304859.jpg",
+          "wojtek/20260409-131038-332477.jpg",
+          "wojtek/20260409-131039-362685.jpg",
+          "wojtek/20260409-131040-393577.jpg",
+          "wojtek/20260409-131041-430183.jpg",
+          "wojtek/20260409-131042-464089.jpg",
+          "wojtek/20260409-131043-497111.jpg",
+          "wojtek/20260409-131044-532240.jpg",
+          "wojtek/20260409-131045-564300.jpg",
+          "wojtek/20260409-131046-600018.jpg"
+        ],
+        "image_details": [
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-131037-304859.jpg",
+            "captured_at": "2026-04-09T13:10:37.306741",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 61714
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-131038-332477.jpg",
+            "captured_at": "2026-04-09T13:10:38.333737",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 61897
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-131039-362685.jpg",
+            "captured_at": "2026-04-09T13:10:39.363165",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 61930
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-131040-393577.jpg",
+            "captured_at": "2026-04-09T13:10:40.394204",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 62609
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-131041-430183.jpg",
+            "captured_at": "2026-04-09T13:10:41.430801",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 60012
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-131042-464089.jpg",
+            "captured_at": "2026-04-09T13:10:42.464538",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 61314
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-131043-497111.jpg",
+            "captured_at": "2026-04-09T13:10:43.497626",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 61810
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-131044-532240.jpg",
+            "captured_at": "2026-04-09T13:10:44.532881",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 62262
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-131045-564300.jpg",
+            "captured_at": "2026-04-09T13:10:45.564811",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 62129
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-131046-600018.jpg",
+            "captured_at": "2026-04-09T13:10:46.600545",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 61571
+          }
+        ]
+      }
+    ],
+    "fingerprint": "f9584a1cdf650bf5db28447c98cad8f51858a000a77434383a971f038f5f2e7f",
+    "has_images": true,
+    "has_multiple_labels": true
+  },
+  "config": {
+    "data_dir": "/Users/womat1/Projects/vision-ai/training/images",
+    "models_dir": "/Users/womat1/Projects/vision-ai/models",
+    "epochs": 15,
+    "batch_size": 32,
+    "image_size": 180,
+    "seed": 123,
+    "validation_split": 0.2,
+    "learning_rate": 0.001,
+    "export_name": null
+  },
+  "artifacts": {
+    "classifier": "/Users/womat1/Projects/vision-ai/models/classifier-20260409-142233/classifier.keras",
+    "best_checkpoint": "/Users/womat1/Projects/vision-ai/models/classifier-20260409-142233/best.keras",
+    "labels": "/Users/womat1/Projects/vision-ai/models/classifier-20260409-142233/labels.json",
+    "history": "/Users/womat1/Projects/vision-ai/models/classifier-20260409-142233/history.json"
+  },
+  "final_metrics": {
+    "accuracy": 0.6774193644523621,
+    "loss": 0.9819206595420837,
+    "val_accuracy": 1.0,
+    "val_loss": 0.5030956864356995
+  }
+}

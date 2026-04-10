@@ -6,6 +6,8 @@ This project now includes:
 - a FastAPI inference server
 - a React camera frontend that draws the live stream onto a canvas and sends captured frames to the backend for classification
 - an in-app sample collection flow that saves labeled camera frames into the training dataset
+- a Jira RAG backend that syncs Jira issues, chunks them, embeds them with sentence-transformers, and stores them in FAISS
+- a routed React workspace with both the existing Vision AI experience and a new Jira Assistant page
 
 Training images should be placed in class-specific subfolders under `training/images`:
 
@@ -24,7 +26,28 @@ Each subfolder name becomes a class label.
 
 ## Environment
 
-TensorFlow is installed in the local virtual environment at `.venv`.
+Create the local virtual environment with Python 3.11:
+
+```bash
+python3.11 -m venv .venv
+```
+
+Install backend packages into that environment:
+
+```bash
+./.venv/bin/pip install -r requirements.txt
+```
+
+Copy the env template and add your Jira token:
+
+```bash
+cp .env.example .env
+```
+
+The backend now auto-loads `.env` on startup, so you do not need to manually export the Jira variables first.
+
+On macOS and Linux, use `./.venv/bin/python` for Python commands.
+On Windows PowerShell, use `.\.venv\Scripts\python.exe`.
 
 Install frontend packages with:
 
@@ -36,14 +59,14 @@ npm install
 
 Run training with:
 
-```powershell
-.\.venv\Scripts\python.exe -m backend --epochs 15
+```bash
+./.venv/bin/python -m backend --epochs 15
 ```
 
 Optional flags:
 
-```powershell
-.\.venv\Scripts\python.exe -m backend --epochs 20 --batch-size 16 --image-size 224 --export-name pets-v1
+```bash
+./.venv/bin/python -m backend --epochs 20 --batch-size 16 --image-size 224 --export-name pets-v1
 ```
 
 The training script:
@@ -67,8 +90,8 @@ The React app uses the Python backend to classify captured frames.
 
 Start the API with:
 
-```powershell
-.\.venv\Scripts\python.exe -m backend.api
+```bash
+./.venv/bin/python -m backend.api
 ```
 
 By default the API runs at `http://127.0.0.1:8000`.
@@ -76,8 +99,11 @@ By default the API runs at `http://127.0.0.1:8000`.
 Available routes:
 
 - `GET /api/health`
+- `GET /health`
 - `GET /api/models`
 - `POST /api/classify`
+- `POST /jira/sync`
+- `POST /jira/chat`
 
 The API automatically uses the newest model in `models/` unless a specific model name is requested.
 
@@ -90,6 +116,31 @@ npm run dev
 ```
 
 By default the frontend runs at `http://localhost:5173` and proxies `/api/*` requests to the backend on port `8000`.
+It also proxies `/jira/*` and `/health`.
+
+## Jira Assistant
+
+The Jira backend reads these environment variables:
+
+- `JIRA_BASE_URL`
+- `JIRA_TOKEN`
+- `JIRA_JQL`
+
+The sync flow:
+
+- fetches Jira issues with bearer token auth
+- follows Jira pagination
+- normalizes key fields and saves them to local JSON in `data/jira`
+- chunks issue content into documents
+- creates embeddings with sentence-transformers
+- stores vectors in FAISS for retrieval
+
+The chat flow:
+
+- retrieves the most relevant Jira chunks
+- builds grounded context
+- sends that context through a provider abstraction
+- returns an answer plus source issue keys and excerpts
 
 ## Frontend Behavior
 
