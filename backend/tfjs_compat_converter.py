@@ -37,6 +37,19 @@ def _patch_optional_imports() -> None:
         sys.modules["jax.experimental"] = jax_experimental
         sys.modules["jax.experimental.jax2tf"] = jax2tf_module
 
+    # Newer/older JAX builds may not expose jax.monitoring, but Keras imports
+    # callback modules that expect monitoring.record_scalar to exist.
+    try:
+        import jax
+
+        if not hasattr(jax, "monitoring"):
+            jax.monitoring = types.SimpleNamespace(  # type: ignore[attr-defined]
+                record_scalar=lambda *args, **kwargs: None
+            )
+    except Exception:
+        # Keep conversion path resilient if JAX itself is partially broken.
+        pass
+
 
 def _read_input_format(args: Sequence[str]) -> str | None:
     for index, value in enumerate(args):
