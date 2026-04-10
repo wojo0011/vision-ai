@@ -2911,25 +2911,39 @@ export default function App() {
 
               <div className="mode-toggle">
                 <div className="mode-toggle-primary">
-                  <span>Mode</span>
-                  <label className="switch">
-                    <input
-                      type="checkbox"
-                      checked={collectionMode}
-                      onChange={(event) => {
-                        const enabled = event.target.checked;
-                        setCollectionMode(enabled);
-                        if (enabled) {
-                          setliveClassificationEnabled(false);
-                          setPredictionError("");
-                        }
+                  <span className="status-label">Mode</span>
+                  <div className="inference-mode-toggle" role="radiogroup" aria-label="Mode selection">
+                    <button
+                      className={
+                        !collectionMode
+                          ? "inference-mode-button active"
+                          : "inference-mode-button"
+                      }
+                      onClick={() => setCollectionMode(false)}
+                      type="button"
+                      role="radio"
+                      aria-checked={!collectionMode}
+                    >
+                      Classify
+                    </button>
+                    <button
+                      className={
+                        collectionMode
+                          ? "inference-mode-button active"
+                          : "inference-mode-button"
+                      }
+                      onClick={() => {
+                        setCollectionMode(true);
+                        setliveClassificationEnabled(false);
+                        setPredictionError("");
                       }}
-                    />
-                    <span className="switch-track">
-                      <span className="switch-thumb" />
-                    </span>
-                  </label>
-                  <strong>{collectionMode ? "Collect samples" : "Classify frame"}</strong>
+                      type="button"
+                      role="radio"
+                      aria-checked={collectionMode}
+                    >
+                      Capture
+                    </button>
+                  </div>
                 </div>
 
                 <div className="mode-toggle-runtime">
