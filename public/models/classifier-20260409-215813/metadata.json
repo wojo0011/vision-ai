@@ -1,0 +1,2960 @@
+{
+  "training_started_at": "2026-04-09T21:58:13.893453",
+  "trained_at": "2026-04-09T21:58:55.713987",
+  "training_duration_seconds": 41.821,
+  "class_names": [
+    "christmas mug",
+    "surprise mug",
+    "unknown",
+    "vappley peanut",
+    "wojtek"
+  ],
+  "dataset": {
+    "data_dir": "C:\\Users\\Wojo\\Documents\\Projects\\vision-ai\\training\\images",
+    "label_count": 5,
+    "total_images": 287,
+    "labels": [
+      {
+        "name": "christmas mug",
+        "directory": "C:\\Users\\Wojo\\Documents\\Projects\\vision-ai\\training\\images\\christmas mug",
+        "image_count": 3,
+        "images": [
+          "christmas mug/20260408-005405-019669.jpg",
+          "christmas mug/20260408-005411-660896.jpg",
+          "christmas mug/20260408-005412-922838.jpg"
+        ],
+        "image_details": [
+          {
+            "label": "christmas mug",
+            "relative_path": "christmas mug/20260408-005405-019669.jpg",
+            "captured_at": "2026-04-08T00:54:05.022663",
+            "width": null,
+            "height": null,
+            "resolution": null,
+            "file_size_bytes": 130456
+          },
+          {
+            "label": "christmas mug",
+            "relative_path": "christmas mug/20260408-005411-660896.jpg",
+            "captured_at": "2026-04-08T00:54:11.661894",
+            "width": null,
+            "height": null,
+            "resolution": null,
+            "file_size_bytes": 129902
+          },
+          {
+            "label": "christmas mug",
+            "relative_path": "christmas mug/20260408-005412-922838.jpg",
+            "captured_at": "2026-04-08T00:54:12.923856",
+            "width": null,
+            "height": null,
+            "resolution": null,
+            "file_size_bytes": 133261
+          }
+        ]
+      },
+      {
+        "name": "surprise mug",
+        "directory": "C:\\Users\\Wojo\\Documents\\Projects\\vision-ai\\training\\images\\surprise mug",
+        "image_count": 49,
+        "images": [
+          "surprise mug/20260408-005427-445432.jpg",
+          "surprise mug/20260408-005428-163073.jpg",
+          "surprise mug/20260408-005428-635736.jpg",
+          "surprise mug/20260408-014903-465606.jpg",
+          "surprise mug/20260408-014904-785213.jpg",
+          "surprise mug/20260408-014906-122581.jpg",
+          "surprise mug/20260408-014907-358169.jpg",
+          "surprise mug/20260408-014908-535457.jpg",
+          "surprise mug/20260408-014909-991908.jpg",
+          "surprise mug/20260408-014911-503121.jpg",
+          "surprise mug/20260408-014912-633991.jpg",
+          "surprise mug/20260408-014914-271600.jpg",
+          "surprise mug/20260408-014915-435859.jpg",
+          "surprise mug/20260408-014916-961203.jpg",
+          "surprise mug/20260408-014918-620337.jpg",
+          "surprise mug/20260408-014919-735857.jpg",
+          "surprise mug/20260408-014921-103630.jpg",
+          "surprise mug/20260408-014922-304900.jpg",
+          "surprise mug/20260408-014923-635870.jpg",
+          "surprise mug/20260408-014925-625359.jpg",
+          "surprise mug/20260408-014926-867758.jpg",
+          "surprise mug/20260408-014928-003960.jpg",
+          "surprise mug/20260408-014929-499069.jpg",
+          "surprise mug/20260408-014930-880011.jpg",
+          "surprise mug/20260408-014932-423656.jpg",
+          "surprise mug/20260408-014933-903092.jpg",
+          "surprise mug/20260408-014935-646183.jpg",
+          "surprise mug/20260408-014936-944249.jpg",
+          "surprise mug/20260408-014938-662365.jpg",
+          "surprise mug/20260408-014940-157151.jpg",
+          "surprise mug/20260408-014941-952628.jpg",
+          "surprise mug/20260408-014943-492505.jpg",
+          "surprise mug/20260408-014944-817306.jpg",
+          "surprise mug/20260408-014946-675405.jpg",
+          "surprise mug/20260408-014948-319433.jpg",
+          "surprise mug/20260408-014950-216617.jpg",
+          "surprise mug/20260408-014951-560892.jpg",
+          "surprise mug/20260408-014953-253803.jpg",
+          "surprise mug/20260408-014955-185832.jpg",
+          "surprise mug/20260408-014956-436642.jpg",
+          "surprise mug/20260408-014958-396783.jpg",
+          "surprise mug/20260408-014959-784325.jpg",
+          "surprise mug/20260408-015001-263631.jpg",
+          "surprise mug/20260408-015002-503911.jpg",
+          "surprise mug/20260408-015003-875987.jpg",
+          "surprise mug/20260408-015005-692203.jpg",
+          "surprise mug/20260408-015007-079284.jpg",
+          "surprise mug/20260408-015008-547307.jpg",
+          "surprise mug/20260408-015010-023326.jpg"
+        ],
+        "image_details": [
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-005427-445432.jpg",
+            "captured_at": "2026-04-08T00:54:27.446440",
+            "width": null,
+            "height": null,
+            "resolution": null,
+            "file_size_bytes": 127291
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-005428-163073.jpg",
+            "captured_at": "2026-04-08T00:54:28.164071",
+            "width": null,
+            "height": null,
+            "resolution": null,
+            "file_size_bytes": 127623
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-005428-635736.jpg",
+            "captured_at": "2026-04-08T00:54:28.646238",
+            "width": null,
+            "height": null,
+            "resolution": null,
+            "file_size_bytes": 127432
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014903-465606.jpg",
+            "captured_at": "2026-04-08T01:49:03.477845",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 118352
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014904-785213.jpg",
+            "captured_at": "2026-04-08T01:49:04.796771",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 114735
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014906-122581.jpg",
+            "captured_at": "2026-04-08T01:49:06.124579",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 111091
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014907-358169.jpg",
+            "captured_at": "2026-04-08T01:49:07.370446",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 115036
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014908-535457.jpg",
+            "captured_at": "2026-04-08T01:49:08.547011",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 114322
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014909-991908.jpg",
+            "captured_at": "2026-04-08T01:49:09.993910",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 111640
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014911-503121.jpg",
+            "captured_at": "2026-04-08T01:49:11.514139",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 112260
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014912-633991.jpg",
+            "captured_at": "2026-04-08T01:49:12.635985",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 112050
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014914-271600.jpg",
+            "captured_at": "2026-04-08T01:49:14.283842",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 111828
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014915-435859.jpg",
+            "captured_at": "2026-04-08T01:49:15.448331",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 112052
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014916-961203.jpg",
+            "captured_at": "2026-04-08T01:49:16.963198",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 112922
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014918-620337.jpg",
+            "captured_at": "2026-04-08T01:49:18.622332",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 113021
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014919-735857.jpg",
+            "captured_at": "2026-04-08T01:49:19.747985",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 114767
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014921-103630.jpg",
+            "captured_at": "2026-04-08T01:49:21.106497",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 114256
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014922-304900.jpg",
+            "captured_at": "2026-04-08T01:49:22.316688",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 114495
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014923-635870.jpg",
+            "captured_at": "2026-04-08T01:49:23.647719",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 115523
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014925-625359.jpg",
+            "captured_at": "2026-04-08T01:49:25.637867",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 115500
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014926-867758.jpg",
+            "captured_at": "2026-04-08T01:49:26.869752",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 113776
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014928-003960.jpg",
+            "captured_at": "2026-04-08T01:49:28.005955",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 113453
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014929-499069.jpg",
+            "captured_at": "2026-04-08T01:49:29.501366",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 113297
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014930-880011.jpg",
+            "captured_at": "2026-04-08T01:49:30.882005",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 112930
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014932-423656.jpg",
+            "captured_at": "2026-04-08T01:49:32.426138",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 113021
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014933-903092.jpg",
+            "captured_at": "2026-04-08T01:49:33.915555",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 114654
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014935-646183.jpg",
+            "captured_at": "2026-04-08T01:49:35.657037",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 112255
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014936-944249.jpg",
+            "captured_at": "2026-04-08T01:49:36.955607",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 110684
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014938-662365.jpg",
+            "captured_at": "2026-04-08T01:49:38.664359",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 112146
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014940-157151.jpg",
+            "captured_at": "2026-04-08T01:49:40.169441",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 112532
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014941-952628.jpg",
+            "captured_at": "2026-04-08T01:49:41.964101",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 111905
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014943-492505.jpg",
+            "captured_at": "2026-04-08T01:49:43.503830",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 110589
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014944-817306.jpg",
+            "captured_at": "2026-04-08T01:49:44.829333",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 109428
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014946-675405.jpg",
+            "captured_at": "2026-04-08T01:49:46.687538",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 109261
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014948-319433.jpg",
+            "captured_at": "2026-04-08T01:49:48.332199",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 109179
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014950-216617.jpg",
+            "captured_at": "2026-04-08T01:49:50.228403",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 109739
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014951-560892.jpg",
+            "captured_at": "2026-04-08T01:49:51.572704",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 110286
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014953-253803.jpg",
+            "captured_at": "2026-04-08T01:49:53.265348",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 110611
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014955-185832.jpg",
+            "captured_at": "2026-04-08T01:49:55.198783",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 111093
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014956-436642.jpg",
+            "captured_at": "2026-04-08T01:49:56.449379",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 112126
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014958-396783.jpg",
+            "captured_at": "2026-04-08T01:49:58.409427",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 111530
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-014959-784325.jpg",
+            "captured_at": "2026-04-08T01:49:59.796638",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 112613
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-015001-263631.jpg",
+            "captured_at": "2026-04-08T01:50:01.275700",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 113013
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-015002-503911.jpg",
+            "captured_at": "2026-04-08T01:50:02.516381",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 112697
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-015003-875987.jpg",
+            "captured_at": "2026-04-08T01:50:03.878978",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 113072
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-015005-692203.jpg",
+            "captured_at": "2026-04-08T01:50:05.704365",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 113130
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-015007-079284.jpg",
+            "captured_at": "2026-04-08T01:50:07.091725",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 113173
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-015008-547307.jpg",
+            "captured_at": "2026-04-08T01:50:08.559688",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 113926
+          },
+          {
+            "label": "surprise mug",
+            "relative_path": "surprise mug/20260408-015010-023326.jpg",
+            "captured_at": "2026-04-08T01:50:10.036270",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 113243
+          }
+        ]
+      },
+      {
+        "name": "unknown",
+        "directory": "C:\\Users\\Wojo\\Documents\\Projects\\vision-ai\\training\\images\\unknown",
+        "image_count": 46,
+        "images": [
+          "unknown/20260408-014749-182697.jpg",
+          "unknown/20260408-014750-262535.jpg",
+          "unknown/20260408-014751-332039.jpg",
+          "unknown/20260408-014752-410671.jpg",
+          "unknown/20260408-014753-495748.jpg",
+          "unknown/20260408-014754-578077.jpg",
+          "unknown/20260408-014755-647451.jpg",
+          "unknown/20260408-014756-727606.jpg",
+          "unknown/20260408-014757-798901.jpg",
+          "unknown/20260408-014758-877511.jpg",
+          "unknown/20260408-014759-960352.jpg",
+          "unknown/20260408-014801-028860.jpg",
+          "unknown/20260408-014802-121723.jpg",
+          "unknown/20260408-014803-194108.jpg",
+          "unknown/20260408-014804-263579.jpg",
+          "unknown/20260408-014805-344985.jpg",
+          "unknown/20260408-014806-419563.jpg",
+          "unknown/20260408-014807-495130.jpg",
+          "unknown/20260408-014808-605179.jpg",
+          "unknown/20260408-014809-731971.jpg",
+          "unknown/20260408-014810-887307.jpg",
+          "unknown/20260408-014812-059303.jpg",
+          "unknown/20260408-014813-256579.jpg",
+          "unknown/20260408-014814-490781.jpg",
+          "unknown/20260408-014815-830546.jpg",
+          "unknown/20260408-014817-050515.jpg",
+          "unknown/20260408-014818-307134.jpg",
+          "unknown/20260408-014819-593162.jpg",
+          "unknown/20260408-014820-849827.jpg",
+          "unknown/20260408-014822-176113.jpg",
+          "unknown/20260408-014823-485518.jpg",
+          "unknown/20260408-014824-802535.jpg",
+          "unknown/20260408-014825-957180.jpg",
+          "unknown/20260408-014827-107029.jpg",
+          "unknown/20260408-014828-480040.jpg",
+          "unknown/20260408-014829-874200.jpg",
+          "unknown/20260408-014831-055725.jpg",
+          "unknown/20260408-014832-239185.jpg",
+          "unknown/20260408-014833-337458.jpg",
+          "unknown/20260408-014834-534534.jpg",
+          "unknown/20260408-014835-699128.jpg",
+          "unknown/20260408-014837-210814.jpg",
+          "unknown/20260408-014838-435059.jpg",
+          "unknown/20260408-014839-608851.jpg",
+          "unknown/20260408-014841-132868.jpg",
+          "unknown/20260408-014842-685017.jpg"
+        ],
+        "image_details": [
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014749-182697.jpg",
+            "captured_at": "2026-04-08T01:47:49.194062",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 131522
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014750-262535.jpg",
+            "captured_at": "2026-04-08T01:47:50.264529",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 131604
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014751-332039.jpg",
+            "captured_at": "2026-04-08T01:47:51.334048",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 131821
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014752-410671.jpg",
+            "captured_at": "2026-04-08T01:47:52.423174",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 129360
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014753-495748.jpg",
+            "captured_at": "2026-04-08T01:47:53.508029",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 131728
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014754-578077.jpg",
+            "captured_at": "2026-04-08T01:47:54.589627",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132289
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014755-647451.jpg",
+            "captured_at": "2026-04-08T01:47:55.659762",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132187
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014756-727606.jpg",
+            "captured_at": "2026-04-08T01:47:56.740251",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132212
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014757-798901.jpg",
+            "captured_at": "2026-04-08T01:47:57.811206",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132308
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014758-877511.jpg",
+            "captured_at": "2026-04-08T01:47:58.888191",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132012
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014759-960352.jpg",
+            "captured_at": "2026-04-08T01:47:59.972032",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132257
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014801-028860.jpg",
+            "captured_at": "2026-04-08T01:48:01.029857",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132103
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014802-121723.jpg",
+            "captured_at": "2026-04-08T01:48:02.132921",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132007
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014803-194108.jpg",
+            "captured_at": "2026-04-08T01:48:03.204576",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132073
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014804-263579.jpg",
+            "captured_at": "2026-04-08T01:48:04.276647",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132198
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014805-344985.jpg",
+            "captured_at": "2026-04-08T01:48:05.346979",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132054
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014806-419563.jpg",
+            "captured_at": "2026-04-08T01:48:06.421557",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132362
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014807-495130.jpg",
+            "captured_at": "2026-04-08T01:48:07.507391",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132101
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014808-605179.jpg",
+            "captured_at": "2026-04-08T01:48:08.616834",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132278
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014809-731971.jpg",
+            "captured_at": "2026-04-08T01:48:09.743966",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132183
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014810-887307.jpg",
+            "captured_at": "2026-04-08T01:48:10.900198",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132084
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014812-059303.jpg",
+            "captured_at": "2026-04-08T01:48:12.070872",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132178
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014813-256579.jpg",
+            "captured_at": "2026-04-08T01:48:13.259575",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132210
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014814-490781.jpg",
+            "captured_at": "2026-04-08T01:48:14.492775",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132343
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014815-830546.jpg",
+            "captured_at": "2026-04-08T01:48:15.832541",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132308
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014817-050515.jpg",
+            "captured_at": "2026-04-08T01:48:17.061908",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132081
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014818-307134.jpg",
+            "captured_at": "2026-04-08T01:48:18.319330",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132253
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014819-593162.jpg",
+            "captured_at": "2026-04-08T01:48:19.605729",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132095
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014820-849827.jpg",
+            "captured_at": "2026-04-08T01:48:20.851821",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132304
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014822-176113.jpg",
+            "captured_at": "2026-04-08T01:48:22.177111",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132352
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014823-485518.jpg",
+            "captured_at": "2026-04-08T01:48:23.487513",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132179
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014824-802535.jpg",
+            "captured_at": "2026-04-08T01:48:24.804614",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 131992
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014825-957180.jpg",
+            "captured_at": "2026-04-08T01:48:25.960223",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132177
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014827-107029.jpg",
+            "captured_at": "2026-04-08T01:48:27.109023",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132208
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014828-480040.jpg",
+            "captured_at": "2026-04-08T01:48:28.492254",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132264
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014829-874200.jpg",
+            "captured_at": "2026-04-08T01:48:29.884628",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132371
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014831-055725.jpg",
+            "captured_at": "2026-04-08T01:48:31.068125",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132057
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014832-239185.jpg",
+            "captured_at": "2026-04-08T01:48:32.241190",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132094
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014833-337458.jpg",
+            "captured_at": "2026-04-08T01:48:33.339452",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132293
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014834-534534.jpg",
+            "captured_at": "2026-04-08T01:48:34.537544",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132304
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014835-699128.jpg",
+            "captured_at": "2026-04-08T01:48:35.710099",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 131916
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014837-210814.jpg",
+            "captured_at": "2026-04-08T01:48:37.223220",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132094
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014838-435059.jpg",
+            "captured_at": "2026-04-08T01:48:38.446673",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132254
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014839-608851.jpg",
+            "captured_at": "2026-04-08T01:48:39.621036",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132140
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014841-132868.jpg",
+            "captured_at": "2026-04-08T01:48:41.134878",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132469
+          },
+          {
+            "label": "unknown",
+            "relative_path": "unknown/20260408-014842-685017.jpg",
+            "captured_at": "2026-04-08T01:48:42.687012",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132111
+          }
+        ]
+      },
+      {
+        "name": "vappley peanut",
+        "directory": "C:\\Users\\Wojo\\Documents\\Projects\\vision-ai\\training\\images\\vappley peanut",
+        "image_count": 50,
+        "images": [
+          "vappley peanut/20260409-095851-326039.jpg",
+          "vappley peanut/20260409-095852-574072.jpg",
+          "vappley peanut/20260409-095853-758894.jpg",
+          "vappley peanut/20260409-095854-973385.jpg",
+          "vappley peanut/20260409-095856-198691.jpg",
+          "vappley peanut/20260409-095857-373430.jpg",
+          "vappley peanut/20260409-095858-622998.jpg",
+          "vappley peanut/20260409-095859-822174.jpg",
+          "vappley peanut/20260409-095901-060364.jpg",
+          "vappley peanut/20260409-095902-297655.jpg",
+          "vappley peanut/20260409-095903-653316.jpg",
+          "vappley peanut/20260409-095904-950722.jpg",
+          "vappley peanut/20260409-095906-235098.jpg",
+          "vappley peanut/20260409-095907-568105.jpg",
+          "vappley peanut/20260409-095908-834960.jpg",
+          "vappley peanut/20260409-095910-144518.jpg",
+          "vappley peanut/20260409-095911-471184.jpg",
+          "vappley peanut/20260409-095912-723675.jpg",
+          "vappley peanut/20260409-095913-945615.jpg",
+          "vappley peanut/20260409-095915-402732.jpg",
+          "vappley peanut/20260409-095916-773688.jpg",
+          "vappley peanut/20260409-095918-014687.jpg",
+          "vappley peanut/20260409-095919-278044.jpg",
+          "vappley peanut/20260409-095920-531512.jpg",
+          "vappley peanut/20260409-095921-739185.jpg",
+          "vappley peanut/20260409-095923-008756.jpg",
+          "vappley peanut/20260409-095924-325547.jpg",
+          "vappley peanut/20260409-095925-683147.jpg",
+          "vappley peanut/20260409-095926-929185.jpg",
+          "vappley peanut/20260409-095928-250109.jpg",
+          "vappley peanut/20260409-095929-460212.jpg",
+          "vappley peanut/20260409-095930-654003.jpg",
+          "vappley peanut/20260409-095931-864376.jpg",
+          "vappley peanut/20260409-095933-106048.jpg",
+          "vappley peanut/20260409-095934-504403.jpg",
+          "vappley peanut/20260409-095935-720619.jpg",
+          "vappley peanut/20260409-095937-164432.jpg",
+          "vappley peanut/20260409-095938-582023.jpg",
+          "vappley peanut/20260409-095940-136844.jpg",
+          "vappley peanut/20260409-095941-807028.jpg",
+          "vappley peanut/20260409-095943-150655.jpg",
+          "vappley peanut/20260409-095944-499656.jpg",
+          "vappley peanut/20260409-095945-891642.jpg",
+          "vappley peanut/20260409-095947-536210.jpg",
+          "vappley peanut/20260409-095948-925288.jpg",
+          "vappley peanut/20260409-095950-311040.jpg",
+          "vappley peanut/20260409-095951-749387.jpg",
+          "vappley peanut/20260409-095953-291310.jpg",
+          "vappley peanut/20260409-095954-637798.jpg",
+          "vappley peanut/20260409-095956-071072.jpg"
+        ],
+        "image_details": [
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095851-326039.jpg",
+            "captured_at": "2026-04-09T09:58:51.328539",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 121646
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095852-574072.jpg",
+            "captured_at": "2026-04-09T09:58:52.574072",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 120674
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095853-758894.jpg",
+            "captured_at": "2026-04-09T09:58:53.769133",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 119267
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095854-973385.jpg",
+            "captured_at": "2026-04-09T09:58:54.983818",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 119857
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095856-198691.jpg",
+            "captured_at": "2026-04-09T09:58:56.198691",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 119756
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095857-373430.jpg",
+            "captured_at": "2026-04-09T09:58:57.384758",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 114632
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095858-622998.jpg",
+            "captured_at": "2026-04-09T09:58:58.622998",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 117214
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095859-822174.jpg",
+            "captured_at": "2026-04-09T09:58:59.823309",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 118228
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095901-060364.jpg",
+            "captured_at": "2026-04-09T09:59:01.071167",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 116986
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095902-297655.jpg",
+            "captured_at": "2026-04-09T09:59:02.308586",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 120258
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095903-653316.jpg",
+            "captured_at": "2026-04-09T09:59:03.671567",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 115088
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095904-950722.jpg",
+            "captured_at": "2026-04-09T09:59:04.962195",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 112935
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095906-235098.jpg",
+            "captured_at": "2026-04-09T09:59:06.246468",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 113742
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095907-568105.jpg",
+            "captured_at": "2026-04-09T09:59:07.579394",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 115521
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095908-834960.jpg",
+            "captured_at": "2026-04-09T09:59:08.846842",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 114103
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095910-144518.jpg",
+            "captured_at": "2026-04-09T09:59:10.156051",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 115224
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095911-471184.jpg",
+            "captured_at": "2026-04-09T09:59:11.473300",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 117716
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095912-723675.jpg",
+            "captured_at": "2026-04-09T09:59:12.734052",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 120447
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095913-945615.jpg",
+            "captured_at": "2026-04-09T09:59:13.957034",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 123858
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095915-402732.jpg",
+            "captured_at": "2026-04-09T09:59:15.414987",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 123780
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095916-773688.jpg",
+            "captured_at": "2026-04-09T09:59:16.787103",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 121367
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095918-014687.jpg",
+            "captured_at": "2026-04-09T09:59:18.035422",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 115291
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095919-278044.jpg",
+            "captured_at": "2026-04-09T09:59:19.289626",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 114750
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095920-531512.jpg",
+            "captured_at": "2026-04-09T09:59:20.531512",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 118479
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095921-739185.jpg",
+            "captured_at": "2026-04-09T09:59:21.742393",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 121716
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095923-008756.jpg",
+            "captured_at": "2026-04-09T09:59:23.011080",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 115626
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095924-325547.jpg",
+            "captured_at": "2026-04-09T09:59:24.333306",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 123628
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095925-683147.jpg",
+            "captured_at": "2026-04-09T09:59:25.696926",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 123670
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095926-929185.jpg",
+            "captured_at": "2026-04-09T09:59:26.941005",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 119692
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095928-250109.jpg",
+            "captured_at": "2026-04-09T09:59:28.262532",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 124347
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095929-460212.jpg",
+            "captured_at": "2026-04-09T09:59:29.470827",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 124842
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095930-654003.jpg",
+            "captured_at": "2026-04-09T09:59:30.665495",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 124900
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095931-864376.jpg",
+            "captured_at": "2026-04-09T09:59:31.877963",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 125144
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095933-106048.jpg",
+            "captured_at": "2026-04-09T09:59:33.108055",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 123740
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095934-504403.jpg",
+            "captured_at": "2026-04-09T09:59:34.515983",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 113473
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095935-720619.jpg",
+            "captured_at": "2026-04-09T09:59:35.732297",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 111570
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095937-164432.jpg",
+            "captured_at": "2026-04-09T09:59:37.178486",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 115685
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095938-582023.jpg",
+            "captured_at": "2026-04-09T09:59:38.593333",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 112922
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095940-136844.jpg",
+            "captured_at": "2026-04-09T09:59:40.153820",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 116430
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095941-807028.jpg",
+            "captured_at": "2026-04-09T09:59:41.818846",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 116292
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095943-150655.jpg",
+            "captured_at": "2026-04-09T09:59:43.162375",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 113366
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095944-499656.jpg",
+            "captured_at": "2026-04-09T09:59:44.512666",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 119166
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095945-891642.jpg",
+            "captured_at": "2026-04-09T09:59:45.902604",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 115834
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095947-536210.jpg",
+            "captured_at": "2026-04-09T09:59:47.538216",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 113476
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095948-925288.jpg",
+            "captured_at": "2026-04-09T09:59:48.927291",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 115832
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095950-311040.jpg",
+            "captured_at": "2026-04-09T09:59:50.314039",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 115817
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095951-749387.jpg",
+            "captured_at": "2026-04-09T09:59:51.751456",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 112313
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095953-291310.jpg",
+            "captured_at": "2026-04-09T09:59:53.303467",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 113928
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095954-637798.jpg",
+            "captured_at": "2026-04-09T09:59:54.648417",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 113171
+          },
+          {
+            "label": "vappley peanut",
+            "relative_path": "vappley peanut/20260409-095956-071072.jpg",
+            "captured_at": "2026-04-09T09:59:56.081676",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 113963
+          }
+        ]
+      },
+      {
+        "name": "wojtek",
+        "directory": "C:\\Users\\Wojo\\Documents\\Projects\\vision-ai\\training\\images\\wojtek",
+        "image_count": 139,
+        "images": [
+          "wojtek/20260408-011827-329150.jpg",
+          "wojtek/20260408-011828-370700.jpg",
+          "wojtek/20260408-011829-232684.jpg",
+          "wojtek/20260408-014659-255247.jpg",
+          "wojtek/20260408-014700-316570.jpg",
+          "wojtek/20260408-014701-378141.jpg",
+          "wojtek/20260408-014702-445553.jpg",
+          "wojtek/20260408-014703-498124.jpg",
+          "wojtek/20260408-014704-544937.jpg",
+          "wojtek/20260408-014705-614576.jpg",
+          "wojtek/20260408-014706-667289.jpg",
+          "wojtek/20260408-014707-731769.jpg",
+          "wojtek/20260408-014708-795903.jpg",
+          "wojtek/20260408-014709-880956.jpg",
+          "wojtek/20260408-014710-945401.jpg",
+          "wojtek/20260408-014712-012238.jpg",
+          "wojtek/20260408-014713-081603.jpg",
+          "wojtek/20260408-014714-130277.jpg",
+          "wojtek/20260408-014715-194303.jpg",
+          "wojtek/20260408-014716-261296.jpg",
+          "wojtek/20260408-014717-332317.jpg",
+          "wojtek/20260408-014718-394539.jpg",
+          "wojtek/20260408-014719-464783.jpg",
+          "wojtek/20260408-222454-367276.jpg",
+          "wojtek/20260408-222455-518419.jpg",
+          "wojtek/20260408-222456-683237.jpg",
+          "wojtek/20260408-222457-816601.jpg",
+          "wojtek/20260408-222458-950195.jpg",
+          "wojtek/20260408-222500-099492.jpg",
+          "wojtek/20260408-222501-236235.jpg",
+          "wojtek/20260408-222502-399554.jpg",
+          "wojtek/20260408-222503-535899.jpg",
+          "wojtek/20260408-222504-666786.jpg",
+          "wojtek/20260408-222505-816315.jpg",
+          "wojtek/20260408-222506-966344.jpg",
+          "wojtek/20260408-222508-132041.jpg",
+          "wojtek/20260408-222509-266409.jpg",
+          "wojtek/20260408-222510-383011.jpg",
+          "wojtek/20260408-222511-534024.jpg",
+          "wojtek/20260408-222512-665597.jpg",
+          "wojtek/20260408-222513-799365.jpg",
+          "wojtek/20260408-222514-935043.jpg",
+          "wojtek/20260408-222516-120211.jpg",
+          "wojtek/20260408-222517-284977.jpg",
+          "wojtek/20260408-222518-419461.jpg",
+          "wojtek/20260408-222519-582350.jpg",
+          "wojtek/20260408-222520-735676.jpg",
+          "wojtek/20260408-222521-899079.jpg",
+          "wojtek/20260408-222523-032948.jpg",
+          "wojtek/20260408-222524-187697.jpg",
+          "wojtek/20260408-222525-366343.jpg",
+          "wojtek/20260408-222526-515870.jpg",
+          "wojtek/20260408-222527-669000.jpg",
+          "wojtek/20260408-222528-814497.jpg",
+          "wojtek/20260408-222529-967154.jpg",
+          "wojtek/20260408-222531-149110.jpg",
+          "wojtek/20260408-222532-315530.jpg",
+          "wojtek/20260408-222533-498896.jpg",
+          "wojtek/20260408-222534-648926.jpg",
+          "wojtek/20260408-222535-832292.jpg",
+          "wojtek/20260408-222536-998990.jpg",
+          "wojtek/20260408-222538-197807.jpg",
+          "wojtek/20260408-222539-382883.jpg",
+          "wojtek/20260408-222540-532148.jpg",
+          "wojtek/20260408-222541-665416.jpg",
+          "wojtek/20260408-222542-848930.jpg",
+          "wojtek/20260408-222543-998478.jpg",
+          "wojtek/20260408-222545-149800.jpg",
+          "wojtek/20260408-222546-348979.jpg",
+          "wojtek/20260408-222547-533129.jpg",
+          "wojtek/20260408-222548-685385.jpg",
+          "wojtek/20260408-222549-834213.jpg",
+          "wojtek/20260408-222550-998668.jpg",
+          "wojtek/20260409-105712-686459.jpg",
+          "wojtek/20260409-105714-214361.jpg",
+          "wojtek/20260409-105715-466289.jpg",
+          "wojtek/20260409-105716-713361.jpg",
+          "wojtek/20260409-105717-975029.jpg",
+          "wojtek/20260409-105719-301578.jpg",
+          "wojtek/20260409-105721-028244.jpg",
+          "wojtek/20260409-105722-519182.jpg",
+          "wojtek/20260409-105723-715608.jpg",
+          "wojtek/20260409-105725-235411.jpg",
+          "wojtek/20260409-105726-933111.jpg",
+          "wojtek/20260409-105728-219448.jpg",
+          "wojtek/20260409-105729-639474.jpg",
+          "wojtek/20260409-105731-368313.jpg",
+          "wojtek/20260409-105732-654646.jpg",
+          "wojtek/20260409-105734-142377.jpg",
+          "wojtek/20260409-105735-366814.jpg",
+          "wojtek/20260409-105736-882746.jpg",
+          "wojtek/20260409-105738-280961.jpg",
+          "wojtek/20260409-105740-326312.jpg",
+          "wojtek/20260409-105741-552300.jpg",
+          "wojtek/20260409-105742-970852.jpg",
+          "wojtek/20260409-105744-595645.jpg",
+          "wojtek/20260409-105746-093779.jpg",
+          "wojtek/20260409-105747-594861.jpg",
+          "wojtek/20260409-105749-610365.jpg",
+          "wojtek/20260409-105751-319348.jpg",
+          "wojtek/20260409-105752-897505.jpg",
+          "wojtek/20260409-105754-614492.jpg",
+          "wojtek/20260409-105756-164743.jpg",
+          "wojtek/20260409-105757-962488.jpg",
+          "wojtek/20260409-105759-613312.jpg",
+          "wojtek/20260409-105801-017261.jpg",
+          "wojtek/20260409-105802-820146.jpg",
+          "wojtek/20260409-105804-056565.jpg",
+          "wojtek/20260409-105805-713010.jpg",
+          "wojtek/20260409-105806-976319.jpg",
+          "wojtek/20260409-105808-484352.jpg",
+          "wojtek/20260409-105810-206589.jpg",
+          "wojtek/20260409-105812-189981.jpg",
+          "wojtek/20260409-105814-124676.jpg",
+          "wojtek/20260409-105815-467183.jpg",
+          "wojtek/20260409-105817-321953.jpg",
+          "wojtek/20260409-105819-139997.jpg",
+          "wojtek/20260409-105820-883870.jpg",
+          "wojtek/20260409-105822-922798.jpg",
+          "wojtek/20260409-105824-339413.jpg",
+          "wojtek/20260409-105826-178069.jpg",
+          "wojtek/20260409-105827-622692.jpg",
+          "wojtek/20260409-105829-306167.jpg",
+          "wojtek/20260409-214520-021009.jpg",
+          "wojtek/20260409-214544-776622.jpg",
+          "wojtek/20260409-214548-108381.jpg",
+          "wojtek/20260409-214550-513620.jpg",
+          "wojtek/20260409-214552-978059.jpg",
+          "wojtek/20260409-214555-405970.jpg",
+          "wojtek/20260409-215734-032277.jpg",
+          "wojtek/20260409-215736-376323.jpg",
+          "wojtek/20260409-215738-648601.jpg",
+          "wojtek/20260409-215740-989302.jpg",
+          "wojtek/20260409-215743-316769.jpg",
+          "wojtek/20260409-215745-491794.jpg",
+          "wojtek/20260409-215747-819710.jpg",
+          "wojtek/20260409-215750-161304.jpg",
+          "wojtek/20260409-215752-317476.jpg",
+          "wojtek/20260409-215754-495690.jpg"
+        ],
+        "image_details": [
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-011827-329150.jpg",
+            "captured_at": "2026-04-08T01:18:27.331164",
+            "width": null,
+            "height": null,
+            "resolution": null,
+            "file_size_bytes": 120482
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-011828-370700.jpg",
+            "captured_at": "2026-04-08T01:18:28.371698",
+            "width": null,
+            "height": null,
+            "resolution": null,
+            "file_size_bytes": 120187
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-011829-232684.jpg",
+            "captured_at": "2026-04-08T01:18:29.233683",
+            "width": null,
+            "height": null,
+            "resolution": null,
+            "file_size_bytes": 119800
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-014659-255247.jpg",
+            "captured_at": "2026-04-08T01:46:59.258250",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 119538
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-014700-316570.jpg",
+            "captured_at": "2026-04-08T01:47:00.318565",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 119518
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-014701-378141.jpg",
+            "captured_at": "2026-04-08T01:47:01.390492",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 119224
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-014702-445553.jpg",
+            "captured_at": "2026-04-08T01:47:02.447822",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 119608
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-014703-498124.jpg",
+            "captured_at": "2026-04-08T01:47:03.500122",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 119625
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-014704-544937.jpg",
+            "captured_at": "2026-04-08T01:47:04.557337",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 119392
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-014705-614576.jpg",
+            "captured_at": "2026-04-08T01:47:05.616569",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 119378
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-014706-667289.jpg",
+            "captured_at": "2026-04-08T01:47:06.669283",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 119346
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-014707-731769.jpg",
+            "captured_at": "2026-04-08T01:47:07.733783",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 119014
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-014708-795903.jpg",
+            "captured_at": "2026-04-08T01:47:08.799484",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 119296
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-014709-880956.jpg",
+            "captured_at": "2026-04-08T01:47:09.893345",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 119370
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-014710-945401.jpg",
+            "captured_at": "2026-04-08T01:47:10.956402",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 119271
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-014712-012238.jpg",
+            "captured_at": "2026-04-08T01:47:12.016079",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 117348
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-014713-081603.jpg",
+            "captured_at": "2026-04-08T01:47:13.083612",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 120483
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-014714-130277.jpg",
+            "captured_at": "2026-04-08T01:47:14.138928",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 120724
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-014715-194303.jpg",
+            "captured_at": "2026-04-08T01:47:15.206739",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 120053
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-014716-261296.jpg",
+            "captured_at": "2026-04-08T01:47:16.273564",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 120102
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-014717-332317.jpg",
+            "captured_at": "2026-04-08T01:47:17.334324",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 120165
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-014718-394539.jpg",
+            "captured_at": "2026-04-08T01:47:18.406263",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 120146
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-014719-464783.jpg",
+            "captured_at": "2026-04-08T01:47:19.468054",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 120580
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222454-367276.jpg",
+            "captured_at": "2026-04-08T22:24:54.370671",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 120840
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222455-518419.jpg",
+            "captured_at": "2026-04-08T22:24:55.531206",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 121621
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222456-683237.jpg",
+            "captured_at": "2026-04-08T22:24:56.693878",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 121205
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222457-816601.jpg",
+            "captured_at": "2026-04-08T22:24:57.818882",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 120487
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222458-950195.jpg",
+            "captured_at": "2026-04-08T22:24:58.962496",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 120984
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222500-099492.jpg",
+            "captured_at": "2026-04-08T22:25:00.101497",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 119744
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222501-236235.jpg",
+            "captured_at": "2026-04-08T22:25:01.248822",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 115116
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222502-399554.jpg",
+            "captured_at": "2026-04-08T22:25:02.401575",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 114132
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222503-535899.jpg",
+            "captured_at": "2026-04-08T22:25:03.548776",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 118934
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222504-666786.jpg",
+            "captured_at": "2026-04-08T22:25:04.678373",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 117608
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222505-816315.jpg",
+            "captured_at": "2026-04-08T22:25:05.818317",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 121709
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222506-966344.jpg",
+            "captured_at": "2026-04-08T22:25:06.977851",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 121158
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222508-132041.jpg",
+            "captured_at": "2026-04-08T22:25:08.144234",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 120603
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222509-266409.jpg",
+            "captured_at": "2026-04-08T22:25:09.268417",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 116333
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222510-383011.jpg",
+            "captured_at": "2026-04-08T22:25:10.395163",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 115374
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222511-534024.jpg",
+            "captured_at": "2026-04-08T22:25:11.547519",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 116956
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222512-665597.jpg",
+            "captured_at": "2026-04-08T22:25:12.678379",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 113943
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222513-799365.jpg",
+            "captured_at": "2026-04-08T22:25:13.809751",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 113222
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222514-935043.jpg",
+            "captured_at": "2026-04-08T22:25:14.947586",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 118286
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222516-120211.jpg",
+            "captured_at": "2026-04-08T22:25:16.122216",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 116505
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222517-284977.jpg",
+            "captured_at": "2026-04-08T22:25:17.297570",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 114256
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222518-419461.jpg",
+            "captured_at": "2026-04-08T22:25:18.431906",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 114718
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222519-582350.jpg",
+            "captured_at": "2026-04-08T22:25:19.595087",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 115338
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222520-735676.jpg",
+            "captured_at": "2026-04-08T22:25:20.738877",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 114278
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222521-899079.jpg",
+            "captured_at": "2026-04-08T22:25:21.910663",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 115269
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222523-032948.jpg",
+            "captured_at": "2026-04-08T22:25:23.045893",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 115298
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222524-187697.jpg",
+            "captured_at": "2026-04-08T22:25:24.189736",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 115998
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222525-366343.jpg",
+            "captured_at": "2026-04-08T22:25:25.378340",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 115963
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222526-515870.jpg",
+            "captured_at": "2026-04-08T22:25:26.518036",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 117183
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222527-669000.jpg",
+            "captured_at": "2026-04-08T22:25:27.681111",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 120927
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222528-814497.jpg",
+            "captured_at": "2026-04-08T22:25:28.827851",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 122217
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222529-967154.jpg",
+            "captured_at": "2026-04-08T22:25:29.979513",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 120746
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222531-149110.jpg",
+            "captured_at": "2026-04-08T22:25:31.151354",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 117214
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222532-315530.jpg",
+            "captured_at": "2026-04-08T22:25:32.327715",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 115792
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222533-498896.jpg",
+            "captured_at": "2026-04-08T22:25:33.512250",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 115461
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222534-648926.jpg",
+            "captured_at": "2026-04-08T22:25:34.660738",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 115048
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222535-832292.jpg",
+            "captured_at": "2026-04-08T22:25:35.843394",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 112977
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222536-998990.jpg",
+            "captured_at": "2026-04-08T22:25:37.010463",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 120195
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222538-197807.jpg",
+            "captured_at": "2026-04-08T22:25:38.206113",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 123650
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222539-382883.jpg",
+            "captured_at": "2026-04-08T22:25:39.385709",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 119867
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222540-532148.jpg",
+            "captured_at": "2026-04-08T22:25:40.535748",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 118260
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222541-665416.jpg",
+            "captured_at": "2026-04-08T22:25:41.678159",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 118088
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222542-848930.jpg",
+            "captured_at": "2026-04-08T22:25:42.861559",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 117871
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222543-998478.jpg",
+            "captured_at": "2026-04-08T22:25:44.011513",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 119428
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222545-149800.jpg",
+            "captured_at": "2026-04-08T22:25:45.162775",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 119114
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222546-348979.jpg",
+            "captured_at": "2026-04-08T22:25:46.361845",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 119551
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222547-533129.jpg",
+            "captured_at": "2026-04-08T22:25:47.537389",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 118521
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222548-685385.jpg",
+            "captured_at": "2026-04-08T22:25:48.687959",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 119562
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222549-834213.jpg",
+            "captured_at": "2026-04-08T22:25:49.846861",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 118396
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260408-222550-998668.jpg",
+            "captured_at": "2026-04-08T22:25:51.011516",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 120618
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105712-686459.jpg",
+            "captured_at": "2026-04-09T10:57:12.699660",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 125576
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105714-214361.jpg",
+            "captured_at": "2026-04-09T10:57:14.217474",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 127081
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105715-466289.jpg",
+            "captured_at": "2026-04-09T10:57:15.477717",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 127109
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105716-713361.jpg",
+            "captured_at": "2026-04-09T10:57:16.725166",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 128277
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105717-975029.jpg",
+            "captured_at": "2026-04-09T10:57:17.990745",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 127633
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105719-301578.jpg",
+            "captured_at": "2026-04-09T10:57:19.312564",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 127695
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105721-028244.jpg",
+            "captured_at": "2026-04-09T10:57:21.040676",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 127775
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105722-519182.jpg",
+            "captured_at": "2026-04-09T10:57:22.530981",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 127436
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105723-715608.jpg",
+            "captured_at": "2026-04-09T10:57:23.728098",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 127515
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105725-235411.jpg",
+            "captured_at": "2026-04-09T10:57:25.247003",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 127263
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105726-933111.jpg",
+            "captured_at": "2026-04-09T10:57:26.945067",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 128073
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105728-219448.jpg",
+            "captured_at": "2026-04-09T10:57:28.231933",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 126203
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105729-639474.jpg",
+            "captured_at": "2026-04-09T10:57:29.650861",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 126894
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105731-368313.jpg",
+            "captured_at": "2026-04-09T10:57:31.370673",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 134874
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105732-654646.jpg",
+            "captured_at": "2026-04-09T10:57:32.656748",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 134557
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105734-142377.jpg",
+            "captured_at": "2026-04-09T10:57:34.145460",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 134207
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105735-366814.jpg",
+            "captured_at": "2026-04-09T10:57:35.369906",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 134853
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105736-882746.jpg",
+            "captured_at": "2026-04-09T10:57:36.886382",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 135173
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105738-280961.jpg",
+            "captured_at": "2026-04-09T10:57:38.284346",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 134498
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105740-326312.jpg",
+            "captured_at": "2026-04-09T10:57:40.339696",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 134855
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105741-552300.jpg",
+            "captured_at": "2026-04-09T10:57:41.555574",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 135332
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105742-970852.jpg",
+            "captured_at": "2026-04-09T10:57:42.970852",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 135379
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105744-595645.jpg",
+            "captured_at": "2026-04-09T10:57:44.613487",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 135940
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105746-093779.jpg",
+            "captured_at": "2026-04-09T10:57:46.106473",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 135218
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105747-594861.jpg",
+            "captured_at": "2026-04-09T10:57:47.608535",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 135482
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105749-610365.jpg",
+            "captured_at": "2026-04-09T10:57:49.623951",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 136079
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105751-319348.jpg",
+            "captured_at": "2026-04-09T10:57:51.338866",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 135700
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105752-897505.jpg",
+            "captured_at": "2026-04-09T10:57:52.909237",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 135552
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105754-614492.jpg",
+            "captured_at": "2026-04-09T10:57:54.617943",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 135304
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105756-164743.jpg",
+            "captured_at": "2026-04-09T10:57:56.176618",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 135968
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105757-962488.jpg",
+            "captured_at": "2026-04-09T10:57:57.976218",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 135755
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105759-613312.jpg",
+            "captured_at": "2026-04-09T10:57:59.616401",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 135780
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105801-017261.jpg",
+            "captured_at": "2026-04-09T10:58:01.029306",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 135184
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105802-820146.jpg",
+            "captured_at": "2026-04-09T10:58:02.823629",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 135417
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105804-056565.jpg",
+            "captured_at": "2026-04-09T10:58:04.056565",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 134296
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105805-713010.jpg",
+            "captured_at": "2026-04-09T10:58:05.725385",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 135816
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105806-976319.jpg",
+            "captured_at": "2026-04-09T10:58:06.988688",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 136022
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105808-484352.jpg",
+            "captured_at": "2026-04-09T10:58:08.496412",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 135839
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105810-206589.jpg",
+            "captured_at": "2026-04-09T10:58:10.219684",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 135028
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105812-189981.jpg",
+            "captured_at": "2026-04-09T10:58:12.189981",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 133970
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105814-124676.jpg",
+            "captured_at": "2026-04-09T10:58:14.138045",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 134189
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105815-467183.jpg",
+            "captured_at": "2026-04-09T10:58:15.479055",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132521
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105817-321953.jpg",
+            "captured_at": "2026-04-09T10:58:17.333432",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 134159
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105819-139997.jpg",
+            "captured_at": "2026-04-09T10:58:19.139997",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 134086
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105820-883870.jpg",
+            "captured_at": "2026-04-09T10:58:20.896255",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 135021
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105822-922798.jpg",
+            "captured_at": "2026-04-09T10:58:22.935102",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 134677
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105824-339413.jpg",
+            "captured_at": "2026-04-09T10:58:24.353933",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 134518
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105826-178069.jpg",
+            "captured_at": "2026-04-09T10:58:26.191623",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 133392
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105827-622692.jpg",
+            "captured_at": "2026-04-09T10:58:27.631418",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 132874
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-105829-306167.jpg",
+            "captured_at": "2026-04-09T10:58:29.322866",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 133517
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-214520-021009.jpg",
+            "captured_at": "2026-04-09T21:45:20.034281",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 149685
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-214544-776622.jpg",
+            "captured_at": "2026-04-09T21:45:44.779082",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 149502
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-214548-108381.jpg",
+            "captured_at": "2026-04-09T21:45:48.122303",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 150104
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-214550-513620.jpg",
+            "captured_at": "2026-04-09T21:45:50.526359",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 149711
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-214552-978059.jpg",
+            "captured_at": "2026-04-09T21:45:52.981707",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 151779
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-214555-405970.jpg",
+            "captured_at": "2026-04-09T21:45:55.446051",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 151948
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-215734-032277.jpg",
+            "captured_at": "2026-04-09T21:57:34.035460",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 30588
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-215736-376323.jpg",
+            "captured_at": "2026-04-09T21:57:36.379418",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 30887
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-215738-648601.jpg",
+            "captured_at": "2026-04-09T21:57:38.661302",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 31057
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-215740-989302.jpg",
+            "captured_at": "2026-04-09T21:57:41.001284",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 31126
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-215743-316769.jpg",
+            "captured_at": "2026-04-09T21:57:43.329317",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 30780
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-215745-491794.jpg",
+            "captured_at": "2026-04-09T21:57:45.504959",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 30873
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-215747-819710.jpg",
+            "captured_at": "2026-04-09T21:57:47.832441",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 30871
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-215750-161304.jpg",
+            "captured_at": "2026-04-09T21:57:50.173920",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 31008
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-215752-317476.jpg",
+            "captured_at": "2026-04-09T21:57:52.331666",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 30896
+          },
+          {
+            "label": "wojtek",
+            "relative_path": "wojtek/20260409-215754-495690.jpg",
+            "captured_at": "2026-04-09T21:57:54.508921",
+            "width": 960,
+            "height": 540,
+            "resolution": "960x540",
+            "file_size_bytes": 31249
+          }
+        ]
+      }
+    ],
+    "fingerprint": "c71a1e86b8ecf508e2b80823cf7bef5c4c97234e38653040096f8b81e32b3fb3",
+    "has_images": true,
+    "has_multiple_labels": true
+  },
+  "config": {
+    "data_dir": "C:\\Users\\Wojo\\Documents\\Projects\\vision-ai\\training\\images",
+    "models_dir": "C:\\Users\\Wojo\\Documents\\Projects\\vision-ai\\models",
+    "epochs": 15,
+    "batch_size": 32,
+    "image_size": 180,
+    "seed": 123,
+    "validation_split": 0.2,
+    "learning_rate": 0.001,
+    "export_name": null
+  },
+  "artifacts": {
+    "classifier": "C:\\Users\\Wojo\\Documents\\Projects\\vision-ai\\models\\classifier-20260409-215813\\classifier.keras",
+    "best_checkpoint": "C:\\Users\\Wojo\\Documents\\Projects\\vision-ai\\models\\classifier-20260409-215813\\best.keras",
+    "labels": "C:\\Users\\Wojo\\Documents\\Projects\\vision-ai\\models\\classifier-20260409-215813\\labels.json",
+    "history": "C:\\Users\\Wojo\\Documents\\Projects\\vision-ai\\models\\classifier-20260409-215813\\history.json"
+  },
+  "final_metrics": {
+    "accuracy": 0.9739130139350891,
+    "loss": 0.12431953847408295,
+    "val_accuracy": 0.9824561476707458,
+    "val_loss": 0.08247166126966476
+  }
+}

@@ -76,6 +76,151 @@ const CAPTURE_HEIGHT = 540;
 const MIN_CAPTURE_COUNT = 1;
 const MAX_CAPTURE_COUNT = 99;
 const CAPTURE_INTERVAL_OPTIONS = Array.from({ length: 10 }, (_, index) => index + 1);
+const BACKGROUND_SEGMENTATION_INTERVAL_MS = 140;
+const BACKGROUND_MASK_EDGE_BLUR_PX = 3;
+const BACKGROUND_BLUR_PX = 16;
+const PERSON_BLUR_PX = 18;
+const BODYPIX_MODEL_CONFIG = {
+  architecture: "MobileNetV1",
+  outputStride: 16,
+  multiplier: 0.75,
+  quantBytes: 2,
+};
+const BODYPIX_SEGMENTATION_CONFIG = {
+  multiSegmentation: false,
+  segmentBodyParts: true,
+  internalResolution: "medium",
+  segmentationThreshold: 0.65,
+};
+const BACKGROUND_EFFECT_OPTIONS = [
+  { value: "off", label: "Off" },
+  { value: "blur", label: "Blur" },
+  { value: "mask", label: "Full mask" },
+];
+const PERSON_EFFECT_OPTIONS = [
+  { value: "off", label: "Off" },
+  { value: "blur", label: "Blur" },
+  { value: "mask", label: "Full mask" },
+];
+const CLASSIFICATION_INPUT_OPTIONS = [
+  {
+    value: "raw",
+    label: "Raw",
+    previewTitle: "Raw",
+    previewDescription: "Unchanged live frame.",
+  },
+  {
+    value: "accuracy",
+    label: "Accuracy",
+    previewTitle: "Accuracy",
+    previewDescription: "Person kept, background removed.",
+  },
+  {
+    value: "privacy",
+    label: "Privacy",
+    previewTitle: "Privacy",
+    previewDescription: "Person masked, background kept.",
+  },
+];
+const EMPTY_CLASSIFICATION_PREVIEWS = {
+  raw: "",
+  accuracy: "",
+  privacy: "",
+};
+
+function createWorkingCanvas() {
+  if (typeof document === "undefined") {
+    return null;
+  }
+
+  return document.createElement("canvas");
+}
+
+function sizeCanvas(canvas) {
+  if (!canvas) {
+    return;
+  }
+
+  canvas.width = CAPTURE_WIDTH;
+  canvas.height = CAPTURE_HEIGHT;
+}
+
+function createSizedWorkingCanvas() {
+  const canvas = createWorkingCanvas();
+  sizeCanvas(canvas);
+  return canvas;
+}
+
+function writeMaskToCanvas(maskCanvas, maskImage) {
+  const maskContext = maskCanvas?.getContext("2d");
+  if (!maskContext || !maskImage) {
+    return false;
+  }
+
+  maskContext.clearRect(0, 0, maskCanvas.width, maskCanvas.height);
+  maskContext.putImageData(maskImage, 0, 0);
+  return true;
+}
+
+function drawCoverFrame(context, source, canvas) {
+  const sourceWidth =
+    source.videoWidth || source.naturalWidth || source.width || CAPTURE_WIDTH;
+  const sourceHeight =
+    source.videoHeight || source.naturalHeight || source.height || CAPTURE_HEIGHT;
+  const scale = Math.max(canvas.width / sourceWidth, canvas.height / sourceHeight);
+  const drawWidth = sourceWidth * scale;
+  const drawHeight = sourceHeight * scale;
+  const offsetX = (canvas.width - drawWidth) / 2;
+  const offsetY = (canvas.height - drawHeight) / 2;
+
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  context.drawImage(source, offsetX, offsetY, drawWidth, drawHeight);
+}
+
+function renderPersonOnlyFrame(sourceCanvas, maskCanvas, outputCanvas, personCanvas) {
+  const outputContext = outputCanvas?.getContext("2d");
+  const personContext = personCanvas?.getContext("2d");
+  if (!outputContext || !personContext || !sourceCanvas || !maskCanvas) {
+    return false;
+  }
+
+  outputContext.clearRect(0, 0, outputCanvas.width, outputCanvas.height);
+  personContext.clearRect(0, 0, personCanvas.width, personCanvas.height);
+  personContext.drawImage(sourceCanvas, 0, 0);
+  personContext.save();
+  personContext.filter = `blur(${BACKGROUND_MASK_EDGE_BLUR_PX}px)`;
+  personContext.globalCompositeOperation = "destination-in";
+  personContext.drawImage(maskCanvas, 0, 0, personCanvas.width, personCanvas.height);
+  personContext.restore();
+  outputContext.drawImage(personCanvas, 0, 0);
+  outputContext.save();
+  outputContext.globalCompositeOperation = "destination-over";
+  outputContext.fillStyle = "#000000";
+  outputContext.fillRect(0, 0, outputCanvas.width, outputCanvas.height);
+  outputContext.restore();
+  return true;
+}
+
+function renderPersonMaskedFrame(sourceCanvas, maskCanvas, outputCanvas) {
+  const outputContext = outputCanvas?.getContext("2d");
+  if (!outputContext || !sourceCanvas || !maskCanvas) {
+    return false;
+  }
+
+  outputContext.clearRect(0, 0, outputCanvas.width, outputCanvas.height);
+  outputContext.drawImage(sourceCanvas, 0, 0);
+  outputContext.save();
+  outputContext.filter = `blur(${BACKGROUND_MASK_EDGE_BLUR_PX}px)`;
+  outputContext.globalCompositeOperation = "destination-out";
+  outputContext.drawImage(maskCanvas, 0, 0, outputCanvas.width, outputCanvas.height);
+  outputContext.restore();
+  outputContext.save();
+  outputContext.globalCompositeOperation = "destination-over";
+  outputContext.fillStyle = "#000000";
+  outputContext.fillRect(0, 0, outputCanvas.width, outputCanvas.height);
+  outputContext.restore();
+  return true;
+}
 
 function IconBase({ children, className = "icon", ...props }) {
   return (
@@ -461,6 +606,12 @@ export default function App() {
   const [liveClassificationEnabled, setliveClassificationEnabled] = useState(false);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const rawCanvasRef = useRef(null);
+  const segmentationInputCanvasRef = useRef(null);
+  const segmentationMaskCanvasRef = useRef(null);
+  const segmentationPersonCanvasRef = useRef(null);
+  const trainingCaptureCanvasRef = useRef(null);
+  const segmentedCapturePersonCanvasRef = useRef(null);
   const animationFrameRef = useRef(0);
   const streamRef = useRef(null);
   const latestClassifyRef = useRef(0);
@@ -468,6 +619,15 @@ export default function App() {
   const captureSequenceTimerRef = useRef(0);
   const captureSequenceResolverRef = useRef(null);
   const captureSequenceAbortRef = useRef(false);
+  const bodySegmentationModuleRef = useRef(null);
+  const segmenterRef = useRef(null);
+  const segmenterLoadPromiseRef = useRef(null);
+  const segmentationInFlightRef = useRef(false);
+  const segmentationRequestRef = useRef(0);
+  const lastSegmentationAtRef = useRef(0);
+  const latestMaskVersionRef = useRef(0);
+  const lastMaskHasForegroundRef = useRef(false);
+  const classificationPreviewRequestRef = useRef(0);
 
   const [cameraState, setCameraState] = useState("idle");
   const [cameraError, setCameraError] = useState("");
@@ -503,6 +663,17 @@ export default function App() {
   const [imageActionMessage, setImageActionMessage] = useState("");
   const [activeImagePath, setActiveImagePath] = useState("");
   const [modalLabelDraft, setModalLabelDraft] = useState("");
+  const [backgroundEffectMode, setBackgroundEffectMode] = useState("off");
+  const [personEffectMode, setPersonEffectMode] = useState("off");
+  const [segmentationStatus, setSegmentationStatus] = useState("idle");
+  const [segmentationError, setSegmentationError] = useState("");
+  const [segmentedTrainingEnabled, setSegmentedTrainingEnabled] = useState(false);
+  const [classificationInputMode, setClassificationInputMode] = useState("raw");
+  const [classificationPreviews, setClassificationPreviews] = useState(
+    EMPTY_CLASSIFICATION_PREVIEWS
+  );
+  const [classificationPreviewStatus, setClassificationPreviewStatus] = useState("idle");
+  const [classificationPreviewError, setClassificationPreviewError] = useState("");
 
   // --- All functions and effects below this line ---
 
@@ -605,25 +776,404 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedModel]);
 
+  const ensureBackgroundSegmenter = useEffectEvent(async () => {
+    if (segmenterRef.current) {
+      setSegmentationStatus("ready");
+      return segmenterRef.current;
+    }
+
+    if (segmenterLoadPromiseRef.current) {
+      return segmenterLoadPromiseRef.current;
+    }
+
+    setSegmentationStatus("loading");
+    setSegmentationError("");
+
+    const loadPromise = (async () => {
+      await tf.ready();
+      try {
+        if (tf.getBackend() !== "webgl") {
+          await tf.setBackend("webgl");
+        }
+      } catch {
+        // Fall back to the current backend if WebGL is not available.
+      }
+      await tf.ready();
+
+      if (!bodySegmentationModuleRef.current) {
+        bodySegmentationModuleRef.current = await import("@tensorflow-models/body-segmentation");
+      }
+
+      const bodySegmentationModule = bodySegmentationModuleRef.current;
+      const segmenter = await bodySegmentationModule.createSegmenter(
+        bodySegmentationModule.SupportedModels.BodyPix,
+        BODYPIX_MODEL_CONFIG
+      );
+
+      segmenterRef.current = segmenter;
+      setSegmentationStatus("ready");
+      return segmenter;
+    })()
+      .catch((error) => {
+        segmenterRef.current?.dispose?.();
+        segmenterRef.current = null;
+        latestMaskVersionRef.current = 0;
+        setSegmentationStatus("error");
+        setSegmentationError(
+          error?.message || "Could not load the person segmentation model."
+        );
+        setBackgroundEffectMode("off");
+        setPersonEffectMode("off");
+        setClassificationInputMode("raw");
+        throw error;
+      })
+      .finally(() => {
+        segmenterLoadPromiseRef.current = null;
+      });
+
+    segmenterLoadPromiseRef.current = loadPromise;
+    return loadPromise;
+  });
+
+  const segmentCanvasToMask = useEffectEvent(async (sourceCanvas) => {
+    await ensureBackgroundSegmenter();
+
+    const segmenter = segmenterRef.current;
+    const bodySegmentationModule = bodySegmentationModuleRef.current;
+    if (!segmenter || !bodySegmentationModule || !sourceCanvas) {
+      throw new Error("Segmented capture is unavailable right now.");
+    }
+
+    const segmentations = await segmenter.segmentPeople(
+      sourceCanvas,
+      BODYPIX_SEGMENTATION_CONFIG
+    );
+    const maskImage = await bodySegmentationModule.toBinaryMask(
+      segmentations,
+      { r: 255, g: 255, b: 255, a: 255 },
+      { r: 0, g: 0, b: 0, a: 0 },
+      false,
+      0.6
+    );
+
+    let hasForeground = false;
+    for (let index = 3; index < maskImage.data.length; index += 4) {
+      if (maskImage.data[index] > 0) {
+        hasForeground = true;
+        break;
+      }
+    }
+
+    return { maskImage, hasForeground };
+  });
+
+  const refreshPreviewMask = useEffectEvent(async (sourceCanvas, requestId) => {
+    const segmenter = segmenterRef.current;
+    const bodySegmentationModule = bodySegmentationModuleRef.current;
+    const maskCanvas = segmentationMaskCanvasRef.current;
+    if (!segmenter || !bodySegmentationModule || !sourceCanvas || !maskCanvas) {
+      segmentationInFlightRef.current = false;
+      return;
+    }
+
+    try {
+      const segmentations = await segmenter.segmentPeople(
+        sourceCanvas,
+        BODYPIX_SEGMENTATION_CONFIG
+      );
+      const maskImage = await bodySegmentationModule.toBinaryMask(
+        segmentations,
+        { r: 255, g: 255, b: 255, a: 255 },
+        { r: 0, g: 0, b: 0, a: 0 },
+        false,
+        0.6
+      );
+      let hasForeground = false;
+      for (let index = 3; index < maskImage.data.length; index += 4) {
+        if (maskImage.data[index] > 0) {
+          hasForeground = true;
+          break;
+        }
+      }
+
+      if (
+        requestId !== segmentationRequestRef.current
+        || (backgroundEffectMode === "off" && personEffectMode === "off")
+      ) {
+        return;
+      }
+
+      const maskContext = maskCanvas.getContext("2d");
+      if (!maskContext) {
+        return;
+      }
+
+      maskContext.clearRect(0, 0, maskCanvas.width, maskCanvas.height);
+      maskContext.putImageData(maskImage, 0, 0);
+      latestMaskVersionRef.current += 1;
+      lastMaskHasForegroundRef.current = hasForeground;
+      setSegmentationStatus("ready");
+    } catch (error) {
+      if (requestId === segmentationRequestRef.current) {
+        latestMaskVersionRef.current = 0;
+        lastMaskHasForegroundRef.current = false;
+        setSegmentationStatus("error");
+        setSegmentationError(error?.message || "Could not segment the current frame.");
+        setBackgroundEffectMode("off");
+        setPersonEffectMode("off");
+        setClassificationInputMode("raw");
+      }
+    } finally {
+      segmentationInFlightRef.current = false;
+    }
+  });
+
+  const renderSegmentedCaptureCanvas = useEffectEvent(async (mode = "person") => {
+    const rawCanvas = rawCanvasRef.current;
+    const maskCanvas = segmentationMaskCanvasRef.current;
+    const outputCanvas = trainingCaptureCanvasRef.current;
+    const capturePersonCanvas = segmentedCapturePersonCanvasRef.current;
+    if (!rawCanvas || !maskCanvas || !outputCanvas || !capturePersonCanvas) {
+      throw new Error("Camera frame is not ready for segmented capture.");
+    }
+
+    while (segmentationInFlightRef.current) {
+      // Keep training captures serialized with preview segmentation work.
+      await new Promise((resolve) => window.setTimeout(resolve, 30));
+    }
+
+    segmentationInFlightRef.current = true;
+
+    try {
+      const { maskImage, hasForeground } = await segmentCanvasToMask(rawCanvas);
+
+      if (!hasForeground) {
+        throw new Error("No person was detected for segmented capture.");
+      }
+
+      if (!writeMaskToCanvas(maskCanvas, maskImage)) {
+        throw new Error("Could not prepare the segmented capture canvas.");
+      }
+
+      latestMaskVersionRef.current += 1;
+      lastMaskHasForegroundRef.current = true;
+      setSegmentationStatus("ready");
+      setSegmentationError("");
+
+      if (mode === "privacy") {
+        if (!renderPersonMaskedFrame(rawCanvas, maskCanvas, outputCanvas)) {
+          throw new Error("Could not prepare the segmented capture canvas.");
+        }
+      } else if (!renderPersonOnlyFrame(rawCanvas, maskCanvas, outputCanvas, capturePersonCanvas)) {
+        throw new Error("Could not prepare the segmented capture canvas.");
+      }
+
+      return outputCanvas;
+    } catch (error) {
+      lastMaskHasForegroundRef.current = false;
+      setSegmentationStatus("error");
+      setSegmentationError(
+        error?.message || "Could not prepare the segmented capture."
+      );
+      throw error;
+    } finally {
+      segmentationInFlightRef.current = false;
+    }
+  });
+
+  const captureClassificationPreviews = useEffectEvent(async (requestId) => {
+    const video = videoRef.current;
+    const rawCanvas = rawCanvasRef.current || canvasRef.current;
+    const snapshotCanvas = createSizedWorkingCanvas();
+    const previewMaskCanvas = createSizedWorkingCanvas();
+    const accuracyCanvas = createSizedWorkingCanvas();
+    const privacyCanvas = createSizedWorkingCanvas();
+    const previewPersonCanvas = createSizedWorkingCanvas();
+    if (
+      !snapshotCanvas
+      || !previewMaskCanvas
+      || !accuracyCanvas
+      || !privacyCanvas
+      || !previewPersonCanvas
+    ) {
+      return;
+    }
+
+    const snapshotContext = snapshotCanvas.getContext("2d");
+    if (!snapshotContext) {
+      return;
+    }
+
+    if (video?.readyState >= 2) {
+      drawCoverFrame(snapshotContext, video, snapshotCanvas);
+    } else if (rawCanvas) {
+      snapshotContext.drawImage(rawCanvas, 0, 0);
+    } else {
+      return;
+    }
+
+    const rawPreview = snapshotCanvas.toDataURL("image/jpeg", 0.9);
+
+    while (segmentationInFlightRef.current) {
+      await new Promise((resolve) => window.setTimeout(resolve, 30));
+    }
+
+    segmentationInFlightRef.current = true;
+
+    try {
+      const { maskImage, hasForeground } = await segmentCanvasToMask(snapshotCanvas);
+
+      if (requestId !== classificationPreviewRequestRef.current) {
+        return;
+      }
+
+      if (!hasForeground) {
+        throw new Error("No person was detected for the classification preview.");
+      }
+
+      if (!writeMaskToCanvas(previewMaskCanvas, maskImage)) {
+        throw new Error("Could not prepare the preview mask.");
+      }
+      if (!renderPersonOnlyFrame(snapshotCanvas, previewMaskCanvas, accuracyCanvas, previewPersonCanvas)) {
+        throw new Error("Could not render the accuracy preview.");
+      }
+      if (!renderPersonMaskedFrame(snapshotCanvas, previewMaskCanvas, privacyCanvas)) {
+        throw new Error("Could not render the privacy preview.");
+      }
+
+      if (requestId !== classificationPreviewRequestRef.current) {
+        return;
+      }
+
+      setClassificationPreviews({
+        raw: rawPreview,
+        accuracy: accuracyCanvas.toDataURL("image/png"),
+        privacy: privacyCanvas.toDataURL("image/png"),
+      });
+      setClassificationPreviewStatus("ready");
+      setClassificationPreviewError("");
+    } catch (error) {
+      if (requestId !== classificationPreviewRequestRef.current) {
+        return;
+      }
+
+      setClassificationPreviews({
+        ...EMPTY_CLASSIFICATION_PREVIEWS,
+        raw: rawPreview,
+      });
+      setClassificationPreviewStatus("error");
+      setClassificationPreviewError(
+        error?.message || "Could not capture the classification preview."
+      );
+    } finally {
+      segmentationInFlightRef.current = false;
+    }
+  });
+
   const drawVideoFrame = useEffectEvent(() => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
-    if (!video || !canvas || video.readyState < 2) {
+    const rawCanvas = rawCanvasRef.current;
+    const segmentationInputCanvas = segmentationInputCanvasRef.current;
+    const maskCanvas = segmentationMaskCanvasRef.current;
+    const personCanvas = segmentationPersonCanvasRef.current;
+    if (
+      !video
+      || !canvas
+      || !rawCanvas
+      || !segmentationInputCanvas
+      || !maskCanvas
+      || !personCanvas
+      || video.readyState < 2
+    ) {
       animationFrameRef.current = requestAnimationFrame(drawVideoFrame);
       return;
     }
 
-    const context = canvas.getContext("2d");
-    const sourceWidth = video.videoWidth || CAPTURE_WIDTH;
-    const sourceHeight = video.videoHeight || CAPTURE_HEIGHT;
-    const scale = Math.max(canvas.width / sourceWidth, canvas.height / sourceHeight);
-    const drawWidth = sourceWidth * scale;
-    const drawHeight = sourceHeight * scale;
-    const offsetX = (canvas.width - drawWidth) / 2;
-    const offsetY = (canvas.height - drawHeight) / 2;
+    const displayContext = canvas.getContext("2d");
+    const rawContext = rawCanvas.getContext("2d");
+    const segmentationInputContext = segmentationInputCanvas.getContext("2d");
+    const personContext = personCanvas.getContext("2d");
+    if (!displayContext || !rawContext || !segmentationInputContext || !personContext) {
+      animationFrameRef.current = requestAnimationFrame(drawVideoFrame);
+      return;
+    }
 
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.drawImage(video, offsetX, offsetY, drawWidth, drawHeight);
+    drawCoverFrame(rawContext, video, rawCanvas);
+
+    displayContext.clearRect(0, 0, canvas.width, canvas.height);
+    const hasForegroundMask = latestMaskVersionRef.current > 0;
+    const previewSegmentationEnabled =
+      backgroundEffectMode !== "off" || personEffectMode !== "off";
+
+    if (backgroundEffectMode === "mask" && hasForegroundMask) {
+      displayContext.drawImage(rawCanvas, 0, 0);
+      displayContext.save();
+      displayContext.filter = `blur(${BACKGROUND_MASK_EDGE_BLUR_PX}px)`;
+      displayContext.globalCompositeOperation = "destination-in";
+      displayContext.drawImage(maskCanvas, 0, 0, canvas.width, canvas.height);
+      displayContext.restore();
+    } else if (backgroundEffectMode === "blur" && hasForegroundMask) {
+      displayContext.save();
+      displayContext.filter = `blur(${BACKGROUND_BLUR_PX}px)`;
+      displayContext.drawImage(rawCanvas, 0, 0);
+      displayContext.restore();
+
+      personContext.clearRect(0, 0, personCanvas.width, personCanvas.height);
+      personContext.drawImage(rawCanvas, 0, 0);
+      personContext.save();
+      personContext.filter = `blur(${BACKGROUND_MASK_EDGE_BLUR_PX}px)`;
+      personContext.globalCompositeOperation = "destination-in";
+      personContext.drawImage(maskCanvas, 0, 0, personCanvas.width, personCanvas.height);
+      personContext.restore();
+      displayContext.drawImage(personCanvas, 0, 0);
+    } else {
+      displayContext.drawImage(rawCanvas, 0, 0);
+    }
+
+    if (personEffectMode === "blur" && hasForegroundMask) {
+      personContext.clearRect(0, 0, personCanvas.width, personCanvas.height);
+      personContext.save();
+      personContext.filter = `blur(${PERSON_BLUR_PX}px)`;
+      personContext.drawImage(canvas, 0, 0);
+      personContext.restore();
+      personContext.save();
+      personContext.filter = `blur(${BACKGROUND_MASK_EDGE_BLUR_PX}px)`;
+      personContext.globalCompositeOperation = "destination-in";
+      personContext.drawImage(maskCanvas, 0, 0, personCanvas.width, personCanvas.height);
+      personContext.restore();
+      displayContext.drawImage(personCanvas, 0, 0);
+    } else if (personEffectMode === "mask" && hasForegroundMask) {
+      displayContext.save();
+      displayContext.filter = `blur(${BACKGROUND_MASK_EDGE_BLUR_PX}px)`;
+      displayContext.globalCompositeOperation = "destination-out";
+      displayContext.drawImage(maskCanvas, 0, 0, canvas.width, canvas.height);
+      displayContext.restore();
+    }
+
+    if (previewSegmentationEnabled) {
+      if (!segmenterRef.current && !segmenterLoadPromiseRef.current) {
+        void ensureBackgroundSegmenter().catch(() => {});
+      }
+
+      if (segmenterRef.current && !segmentationInFlightRef.current) {
+        const now = performance.now();
+        if (now - lastSegmentationAtRef.current >= BACKGROUND_SEGMENTATION_INTERVAL_MS) {
+          segmentationInFlightRef.current = true;
+          lastSegmentationAtRef.current = now;
+          const requestId = ++segmentationRequestRef.current;
+
+          segmentationInputContext.clearRect(
+            0,
+            0,
+            segmentationInputCanvas.width,
+            segmentationInputCanvas.height
+          );
+          segmentationInputContext.drawImage(rawCanvas, 0, 0);
+          void refreshPreviewMask(segmentationInputCanvas, requestId);
+        }
+      }
+    }
 
     animationFrameRef.current = requestAnimationFrame(drawVideoFrame);
   });
@@ -667,8 +1217,8 @@ export default function App() {
   });
 
   const captureAndClassify = useEffectEvent(async () => {
-    const canvas = canvasRef.current;
-    if (!canvas || isClassifying || models.length === 0) {
+    const rawCanvas = rawCanvasRef.current || canvasRef.current;
+    if (!rawCanvas || isClassifying || models.length === 0) {
       return;
     }
 
@@ -678,6 +1228,13 @@ export default function App() {
     setPredictionError("");
 
     try {
+      const canvas = classificationInputMode === "raw"
+        ? rawCanvas
+        : await renderSegmentedCaptureCanvas(classificationInputMode);
+      if (!canvas) {
+        return;
+      }
+
       let payload = null;
       if (inferenceMode === "tfjs" && tfjsModel) {
         const imageSize = Number(selectedModelMeta?.image_size) || 180;
@@ -737,7 +1294,7 @@ export default function App() {
   });
 
   const captureAndSaveSample = useEffectEvent(async () => {
-    const canvas = canvasRef.current;
+    const rawCanvas = rawCanvasRef.current || canvasRef.current;
     const captureLabel = labelInput.trim();
     const totalShots = clampCaptureCount(captureCount);
     const delaySeconds = Math.min(
@@ -745,7 +1302,7 @@ export default function App() {
       Math.max(CAPTURE_INTERVAL_OPTIONS[0], captureIntervalSeconds)
     );
 
-    if (!canvas || isSavingSample) {
+    if (!rawCanvas || isSavingSample) {
       return;
     }
 
@@ -777,7 +1334,10 @@ export default function App() {
           break;
         }
 
-        const blob = await captureCanvasBlob(canvas);
+        const captureCanvas = segmentedTrainingEnabled
+          ? await renderSegmentedCaptureCanvas("person")
+          : rawCanvas;
+        const blob = await captureCanvasBlob(captureCanvas);
         if (!blob) {
           throw new Error("Could not capture the current frame.");
         }
@@ -833,11 +1393,11 @@ export default function App() {
 
       if (savedCount === 1 && lastSaved) {
         setCaptureMessage(
-          `Saved ${lastSaved.relative_path} (${formatResolution(lastSaved.width, lastSaved.height, lastSaved.resolution)}, ${formatFileSize(lastSaved.file_size_bytes)})`
+          `Saved ${segmentedTrainingEnabled ? "segmented " : ""}${lastSaved.relative_path} (${formatResolution(lastSaved.width, lastSaved.height, lastSaved.resolution)}, ${formatFileSize(lastSaved.file_size_bytes)})`
         );
       } else if (savedCount > 1 && lastSaved) {
         setCaptureMessage(
-          `Saved ${savedCount} labeled images to ${lastSaved.label} at ${delaySeconds}s intervals.`
+          `Saved ${savedCount} ${segmentedTrainingEnabled ? "segmented " : ""}labeled images to ${lastSaved.label} at ${delaySeconds}s intervals.`
         );
       }
     } catch (error) {
@@ -1011,11 +1571,31 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (canvas) {
-      canvas.width = CAPTURE_WIDTH;
-      canvas.height = CAPTURE_HEIGHT;
-    }
+    rawCanvasRef.current = createWorkingCanvas();
+    segmentationInputCanvasRef.current = createWorkingCanvas();
+    segmentationMaskCanvasRef.current = createWorkingCanvas();
+    segmentationPersonCanvasRef.current = createWorkingCanvas();
+    trainingCaptureCanvasRef.current = createWorkingCanvas();
+    segmentedCapturePersonCanvasRef.current = createWorkingCanvas();
+
+    [
+      canvasRef.current,
+      rawCanvasRef.current,
+      segmentationInputCanvasRef.current,
+      segmentationMaskCanvasRef.current,
+      segmentationPersonCanvasRef.current,
+      trainingCaptureCanvasRef.current,
+      segmentedCapturePersonCanvasRef.current,
+    ].forEach(sizeCanvas);
+
+    return () => {
+      rawCanvasRef.current = null;
+      segmentationInputCanvasRef.current = null;
+      segmentationMaskCanvasRef.current = null;
+      segmentationPersonCanvasRef.current = null;
+      trainingCaptureCanvasRef.current = null;
+      segmentedCapturePersonCanvasRef.current = null;
+    };
   }, []);
 
   useEffect(() => {
@@ -1066,6 +1646,7 @@ export default function App() {
       isMounted = false;
       cancelAnimationFrame(animationFrameRef.current);
       captureSequenceAbortRef.current = true;
+      segmentationRequestRef.current += 1;
       if (captureSequenceTimerRef.current) {
         window.clearTimeout(captureSequenceTimerRef.current);
         captureSequenceTimerRef.current = 0;
@@ -1078,6 +1659,10 @@ export default function App() {
       if (streamRef.current) {
         streamRef.current.getTracks().forEach((track) => track.stop());
       }
+      segmenterRef.current?.dispose?.();
+      segmenterRef.current = null;
+      segmenterLoadPromiseRef.current = null;
+      bodySegmentationModuleRef.current = null;
     };
   }, []);
 
@@ -1108,6 +1693,87 @@ export default function App() {
     });
     setIsSavingSample(false);
   }, [collectionMode]);
+
+  useEffect(() => {
+    if (cameraState === "ready") {
+      return;
+    }
+
+    classificationPreviewRequestRef.current += 1;
+    setClassificationPreviews(EMPTY_CLASSIFICATION_PREVIEWS);
+    setClassificationPreviewStatus("idle");
+    setClassificationPreviewError("");
+  }, [cameraState]);
+
+  useEffect(() => {
+    if (cameraState !== "ready" || collectionMode) {
+      return;
+    }
+
+    const requestId = Date.now();
+    classificationPreviewRequestRef.current = requestId;
+    setClassificationPreviewStatus("loading");
+    setClassificationPreviewError("");
+
+    const timerId = window.setTimeout(() => {
+      void captureClassificationPreviews(requestId).catch(() => {});
+    }, 180);
+
+    return () => {
+      window.clearTimeout(timerId);
+      if (classificationPreviewRequestRef.current === requestId) {
+        classificationPreviewRequestRef.current += 1;
+      }
+    };
+  }, [cameraState, collectionMode]);
+
+  useEffect(() => {
+    if (
+      backgroundEffectMode === "off"
+      && personEffectMode === "off"
+      && !segmentedTrainingEnabled
+    ) {
+      segmentationRequestRef.current += 1;
+      latestMaskVersionRef.current = 0;
+      lastMaskHasForegroundRef.current = false;
+      return;
+    }
+
+    if (backgroundEffectMode === "off") {
+      return;
+    }
+
+    lastSegmentationAtRef.current = 0;
+    setSegmentationError("");
+    void ensureBackgroundSegmenter().catch(() => {});
+  }, [backgroundEffectMode, personEffectMode, segmentedTrainingEnabled]);
+
+  useEffect(() => {
+    if (personEffectMode === "off") {
+      return;
+    }
+
+    setSegmentationError("");
+    void ensureBackgroundSegmenter().catch(() => {});
+  }, [personEffectMode]);
+
+  useEffect(() => {
+    if (!segmentedTrainingEnabled) {
+      return;
+    }
+
+    setSegmentationError("");
+    void ensureBackgroundSegmenter().catch(() => {});
+  }, [segmentedTrainingEnabled]);
+
+  useEffect(() => {
+    if (classificationInputMode === "raw") {
+      return;
+    }
+
+    setSegmentationError("");
+    void ensureBackgroundSegmenter().catch(() => {});
+  }, [classificationInputMode]);
 
   useEffect(() => {
     if (
@@ -1224,6 +1890,78 @@ export default function App() {
         : "Enter a label"
     : selectedModel || "No model loaded";
   const overlayConfidenceClass = confidenceToneClass(activePrediction?.confidence);
+  const backgroundEffectIndex = Math.max(
+    0,
+    BACKGROUND_EFFECT_OPTIONS.findIndex((option) => option.value === backgroundEffectMode)
+  );
+  const backgroundEffectSliderClass =
+    segmentationStatus === "loading" && backgroundEffectMode !== "off"
+      ? "background-effect-slider pending"
+      : backgroundEffectMode === "mask"
+        ? "background-effect-slider mask"
+        : backgroundEffectMode === "blur"
+          ? "background-effect-slider blur"
+          : "background-effect-slider off";
+  const backgroundEffectHint =
+    segmentationStatus === "loading" && backgroundEffectMode !== "off"
+      ? "Loading the BodyPix person/body-part segmenter..."
+      : segmentationStatus === "error"
+        ? "Background effects are unavailable right now."
+        : backgroundEffectMode === "mask"
+          ? "Only the detected person stays visible in the preview."
+          : backgroundEffectMode === "blur"
+            ? "The background stays visible, but softly blurred."
+            : "Choose how the preview should treat the background.";
+  const personEffectIndex = Math.max(
+    0,
+    PERSON_EFFECT_OPTIONS.findIndex((option) => option.value === personEffectMode)
+  );
+  const personEffectSliderClass =
+    segmentationStatus === "loading" && personEffectMode !== "off"
+      ? "person-effect-slider pending"
+      : personEffectMode === "mask"
+        ? "person-effect-slider mask"
+        : personEffectMode === "blur"
+          ? "person-effect-slider blur"
+          : "person-effect-slider off";
+  const personEffectHint =
+    segmentationStatus === "loading" && personEffectMode !== "off"
+      ? "Loading the BodyPix mask for person effects..."
+      : segmentationStatus === "error"
+        ? "Person effects are unavailable right now."
+        : personEffectMode === "mask"
+          ? "The detected person is fully masked from the preview."
+          : personEffectMode === "blur"
+            ? "Only the detected person is blurred in the preview."
+            : "Choose how the preview should treat the detected person.";
+  const classificationInputHint =
+    classificationInputMode === "raw"
+      ? "Classification uses the raw camera frame."
+      : segmentationStatus === "error"
+        ? "Segmented classification is unavailable until the person mask is ready again."
+        : segmentationStatus === "loading"
+          ? classificationInputMode === "accuracy"
+            ? "Preparing segmented person-only live frames for classification..."
+            : "Preparing live frames with the person masked for classification..."
+          : classificationInputMode === "accuracy"
+          ? "Classification uses segmented person-only live frames for accuracy."
+          : "Classification uses live frames with the person masked and the background preserved for privacy.";
+  const classificationPreviewNote =
+    classificationPreviewStatus === "loading"
+      ? "Capturing one still frame to preview all three input modes..."
+      : classificationPreviewStatus === "error"
+        ? classificationPreviewError || "The preview could not be captured from the current frame."
+        : classificationPreviews.raw
+          ? "Static preview captured from one live frame."
+          : "Preview panels will appear after the camera frame is ready.";
+  const segmentedTrainingHint =
+    segmentedTrainingEnabled
+      ? segmentationStatus === "error"
+        ? "Segmented training capture is unavailable until the person mask is ready again."
+        : segmentationStatus === "loading"
+        ? "Preparing the BodyPix mask for segmented training captures..."
+        : "New training photos will save a person-only cutout on a clean background."
+      : "Training captures will use the raw camera frame.";
 
   useEffect(() => {
     if (!activeImagePath) {
@@ -1443,6 +2181,91 @@ export default function App() {
                 </div>
               </div>
 
+              <div className="preview-tools">
+                <div className="background-effect-control">
+                  <span className="background-effect-heading">
+                    <ImagesIcon />
+                    <span>Background</span>
+                  </span>
+                  <div
+                    className="background-effect-toggle"
+                    role="radiogroup"
+                    aria-label="Background effect"
+                    style={{ "--background-effect-index": backgroundEffectIndex }}
+                  >
+                    <span className={backgroundEffectSliderClass} aria-hidden="true" />
+                    {BACKGROUND_EFFECT_OPTIONS.map((option) => (
+                      <button
+                        key={option.value}
+                        className={
+                          option.value === backgroundEffectMode
+                            ? "background-effect-option active"
+                            : "background-effect-option"
+                        }
+                        onClick={() => setBackgroundEffectMode(option.value)}
+                        type="button"
+                        role="radio"
+                        aria-checked={option.value === backgroundEffectMode}
+                        disabled={cameraState !== "ready"}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="person-effect-control">
+                  <span className="background-effect-heading">
+                    <CameraIcon />
+                    <span>Person</span>
+                  </span>
+                  <div
+                    className="person-effect-toggle"
+                    role="radiogroup"
+                    aria-label="Person effect"
+                    style={{ "--person-effect-index": personEffectIndex }}
+                  >
+                    <span className={personEffectSliderClass} aria-hidden="true" />
+                    {PERSON_EFFECT_OPTIONS.map((option) => (
+                      <button
+                        key={option.value}
+                        className={
+                          option.value === personEffectMode
+                            ? "person-effect-option active"
+                            : "person-effect-option"
+                        }
+                        onClick={() => setPersonEffectMode(option.value)}
+                        type="button"
+                        role="radio"
+                        aria-checked={option.value === personEffectMode}
+                        disabled={cameraState !== "ready"}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="preview-effect-copy">
+                  <span
+                    className={
+                      segmentationStatus === "loading" && backgroundEffectMode !== "off"
+                        ? "background-effect-hint pending"
+                        : "background-effect-hint"
+                    }
+                  >
+                    {backgroundEffectHint}
+                  </span>
+                  <span
+                    className={
+                      segmentationStatus === "loading" && personEffectMode !== "off"
+                        ? "background-effect-hint pending"
+                        : "background-effect-hint"
+                    }
+                  >
+                    {personEffectHint}
+                  </span>
+                </div>
+              </div>
+
               <div className="mode-toggle">
                 <span>Mode</span>
                 <label className="switch">
@@ -1484,6 +2307,29 @@ export default function App() {
                         <span>{labelValidationMessage}</span>
                       </p>
                     ) : null}
+
+                    <div className="feature-toggle-card">
+                      <div className="feature-toggle-copy">
+                        <span className="field-title"><ImagesIcon /> Training source</span>
+                        <strong>
+                          {segmentedTrainingEnabled
+                            ? "Use segmented captures"
+                            : "Use raw camera captures"}
+                        </strong>
+                        <p className="muted compact-line">{segmentedTrainingHint}</p>
+                      </div>
+                      <label className="switch">
+                        <input
+                          type="checkbox"
+                          checked={segmentedTrainingEnabled}
+                          onChange={(event) => setSegmentedTrainingEnabled(event.target.checked)}
+                          disabled={isSavingSample}
+                        />
+                        <span className="switch-track">
+                          <span className="switch-thumb" />
+                        </span>
+                      </label>
+                    </div>
 
                   <div className="capture-config-grid">
                     <label className="field sample-field">
@@ -1623,11 +2469,11 @@ export default function App() {
                     </p>
                   ) : null}
                   </div>
-                ) : (
-                  <>
-                    <label className="field">
-                      <span className="field-title"><ModelIcon /> Model</span>
-                      <select
+                    ) : (
+                      <>
+                        <label className="field">
+                          <span className="field-title"><ModelIcon /> Model</span>
+                          <select
                         value={selectedModel}
                         onChange={(event) => setSelectedModel(event.target.value)}
                         disabled={models.length === 0}
@@ -1638,11 +2484,77 @@ export default function App() {
                             {model.name}
                           </option>
                         ))}
-                      </select>
-                    </label>
+                          </select>
+                        </label>
 
-                    <div className="button-row">
-                      <button
+                        <div className="feature-toggle-card">
+                          <div className="feature-toggle-copy">
+                            <span className="field-title"><LockIcon /> Classification input</span>
+                            <strong>
+                              {classificationInputMode === "raw"
+                                ? "Use raw live frames"
+                                : classificationInputMode === "accuracy"
+                                  ? "Use segmented live frames (accuracy)"
+                                  : "Use segmented live frames (privacy)"}
+                            </strong>
+                            <p className="muted compact-line">{classificationInputHint}</p>
+                          </div>
+                          <div className="classification-input-control">
+                            <div
+                              className="classification-preview-grid"
+                              role="radiogroup"
+                              aria-label="Classification input previews"
+                            >
+                              {CLASSIFICATION_INPUT_OPTIONS.map((option) => {
+                                const previewSrc = classificationPreviews[option.value];
+                                const previewPlaceholder =
+                                  classificationPreviewStatus === "loading"
+                                    ? "Capturing..."
+                                    : classificationPreviewStatus === "error"
+                                      ? "Preview unavailable"
+                                      : "Waiting...";
+
+                                return (
+                                  <button
+                                    key={option.value}
+                                    className={
+                                      option.value === classificationInputMode
+                                        ? `classification-preview-card active ${option.value}`
+                                        : `classification-preview-card ${option.value}`
+                                    }
+                                    onClick={() => setClassificationInputMode(option.value)}
+                                    type="button"
+                                    role="radio"
+                                    aria-checked={option.value === classificationInputMode}
+                                  >
+                                    <div className="classification-preview-image">
+                                      {previewSrc ? (
+                                        <img
+                                          src={previewSrc}
+                                          alt={`${option.previewTitle} classification preview`}
+                                        />
+                                      ) : (
+                                        <div className="classification-preview-placeholder">
+                                          {previewPlaceholder}
+                                        </div>
+                                      )}
+                                    </div>
+                                    <div className="classification-preview-copy">
+                                      <strong>{option.previewTitle}</strong>
+                                      <span>{option.previewDescription}</span>
+                                    </div>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                            <p className="muted compact-line classification-preview-note">
+                              {classificationPreviewNote}
+                            </p>
+                          </div>
+                        </div>
+ 
+                        <div className="button-row">
+                          <button
                         className="primary-button"
                         onClick={captureAndClassify}
                         type="button"
@@ -1727,6 +2639,7 @@ export default function App() {
               {modelsError ? <p className="message error">{modelsError}</p> : null}
               {datasetError ? <p className="message error">{datasetError}</p> : null}
               {predictionError ? <p className="message error">{predictionError}</p> : null}
+              {segmentationError ? <p className="message error">{segmentationError}</p> : null}
               {captureMessage ? <p className="message success">{captureMessage}</p> : null}
               {trainingMessage ? <p className="message success">{trainingMessage}</p> : null}
               {modelMessage ? <p className="message success">{modelMessage}</p> : null}
