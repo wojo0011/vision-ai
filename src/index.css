@@ -649,11 +649,67 @@ input {
   display: flex;
   align-items: center;
   gap: 0.9rem;
+  justify-content: space-between;
   margin-top: 1rem;
   padding: 0.9rem 1rem;
   border-radius: 1.1rem;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.04);
+}
+
+.mode-toggle-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  min-width: 0;
+}
+
+.mode-toggle-runtime {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-left: auto;
+  min-width: 0;
+}
+
+.inference-mode-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.18rem;
+  padding: 0.2rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.inference-mode-button {
+  border: none;
+  background: transparent;
+  color: #c9d3de;
+  padding: 0.42rem 0.75rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1.1;
+  transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.inference-mode-button:hover {
+  transform: translateY(-1px);
+}
+
+.inference-mode-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.inference-mode-button.active {
+  color: #f5f1e8;
+  background: linear-gradient(135deg, rgba(89, 206, 191, 0.22), rgba(122, 167, 255, 0.2));
+  box-shadow: 0 8px 20px rgba(74, 142, 187, 0.18);
 }
 
 .switch {
@@ -1936,5 +1992,15 @@ input {
 
   .training-distribution-donut {
     width: min(100%, 8.25rem);
+  }
+
+  .mode-toggle-primary,
+  .mode-toggle-runtime {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .mode-toggle-runtime {
+    margin-left: 0;
   }
 }

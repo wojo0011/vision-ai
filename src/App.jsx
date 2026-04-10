@@ -1272,7 +1272,6 @@ export default function App() {
   // Trigger TF.js conversion for selected model
   async function triggerTfjsConversion(modelName) {
     setTfjsStatus("converting");
-    setInferenceMode("api");
     setliveClassificationEnabled(false);
     setTfjsModel(null);
     setTfjsLabels([]);
@@ -1316,7 +1315,6 @@ export default function App() {
 
       if (status.last_error) {
         setTfjsStatus("error");
-        setInferenceMode("api");
         setliveClassificationEnabled(false);
         done = true;
       } else if (status.last_result && status.last_result.returncode === 0) {
@@ -1338,17 +1336,14 @@ export default function App() {
           setTfjsModel(model);
           setTfjsLabels(labels);
           setTfjsStatus("ready");
-          setInferenceMode("tfjs");
         } catch (e) {
           setPredictionError(e?.message || "Could not load converted TFJS model.");
           setTfjsStatus("error");
-          setInferenceMode("api");
           setliveClassificationEnabled(false);
         }
         done = true;
       } else {
         setTfjsStatus("idle");
-        setInferenceMode("api");
         setliveClassificationEnabled(false);
         done = true;
       }
@@ -1360,7 +1355,6 @@ export default function App() {
     if (selectedModel) {
       void triggerTfjsConversion(selectedModel).catch((error) => {
         setTfjsStatus("error");
-        setInferenceMode("api");
         setliveClassificationEnabled(false);
         setPredictionError(error.message || "TFJS conversion failed.");
       });
@@ -1828,7 +1822,11 @@ export default function App() {
       }
 
       let payload = null;
-      if (inferenceMode === "tfjs" && tfjsModel) {
+      if (inferenceMode === "tfjs") {
+        if (!tfjsModel) {
+          setPredictionError("On-device model is not ready yet.");
+          return;
+        }
         const imageSize = Number(selectedModelMeta?.image_size) || 180;
         const pixels = tf.browser.fromPixels(canvas);
         const resized = tf.image.resizeBilinear(pixels, [imageSize, imageSize]);
@@ -2370,18 +2368,17 @@ export default function App() {
   useEffect(() => {
     if (
       !liveClassificationEnabled
-      || inferenceMode !== "tfjs"
-      || !tfjsModel
       || cameraState !== "ready"
       || models.length === 0
       || collectionMode
+      || (inferenceMode === "tfjs" && !tfjsModel)
     ) {
       return;
     }
 
     const intervalId = window.setInterval(() => {
       void captureAndClassify();
-    }, 1800);
+    }, inferenceMode === "tfjs" ? 1800 : 5000);
 
     return () => window.clearInterval(intervalId);
   }, [
@@ -2392,6 +2389,10 @@ export default function App() {
     models.length,
     collectionMode,
   ]);
+
+  useEffect(() => {
+    setliveClassificationEnabled(false);
+  }, [inferenceMode]);
 
   useEffect(() => {
     if (!isTraining) {
@@ -2909,25 +2910,61 @@ export default function App() {
               </div>
 
               <div className="mode-toggle">
-                <span>Mode</span>
-                <label className="switch">
-                  <input
-                    type="checkbox"
-                    checked={collectionMode}
-                    onChange={(event) => {
-                      const enabled = event.target.checked;
-                      setCollectionMode(enabled);
-                      if (enabled) {
-                        setliveClassificationEnabled(false);
-                        setPredictionError("");
+                <div className="mode-toggle-primary">
+                  <span>Mode</span>
+                  <label className="switch">
+                    <input
+                      type="checkbox"
+                      checked={collectionMode}
+                      onChange={(event) => {
+                        const enabled = event.target.checked;
+                        setCollectionMode(enabled);
+                        if (enabled) {
+                          setliveClassificationEnabled(false);
+                          setPredictionError("");
+                        }
+                      }}
+                    />
+                    <span className="switch-track">
+                      <span className="switch-thumb" />
+                    </span>
+                  </label>
+                  <strong>{collectionMode ? "Collect samples" : "Classify frame"}</strong>
+                </div>
+
+                <div className="mode-toggle-runtime">
+                  <span className="status-label">Classifier</span>
+                  <div className="inference-mode-toggle" role="radiogroup" aria-label="Classifier runtime">
+                    <button
+                      className={
+                        inferenceMode === "tfjs"
+                          ? "inference-mode-button active"
+                          : "inference-mode-button"
                       }
-                    }}
-                  />
-                  <span className="switch-track">
-                    <span className="switch-thumb" />
-                  </span>
-                </label>
-                <strong>{collectionMode ? "Collect samples" : "Classify frame"}</strong>
+                      onClick={() => setInferenceMode("tfjs")}
+                      type="button"
+                      role="radio"
+                      aria-checked={inferenceMode === "tfjs"}
+                      disabled={collectionMode}
+                    >
+                      Frontend
+                    </button>
+                    <button
+                      className={
+                        inferenceMode === "api"
+                          ? "inference-mode-button active"
+                          : "inference-mode-button"
+                      }
+                      onClick={() => setInferenceMode("api")}
+                      type="button"
+                      role="radio"
+                      aria-checked={inferenceMode === "api"}
+                      disabled={collectionMode}
+                    >
+                      API
+                    </button>
+                  </div>
+                </div>
               </div>
 
               <div className="controls">
@@ -3224,12 +3261,12 @@ export default function App() {
                         className={
                           liveClassificationEnabled
                             ? "live-stream-button on"
-                            : tfjsStatus === "converting"
+                            : inferenceMode === "tfjs" && tfjsStatus === "converting"
                               ? "live-stream-button pending"
                               : "live-stream-button off"
                         }
                         onClick={() => {
-                          if (!liveClassificationEnabled && (inferenceMode !== "tfjs" || !tfjsModel)) {
+                          if (!liveClassificationEnabled && inferenceMode === "tfjs" && !tfjsModel) {
                             return;
                           }
                           setliveClassificationEnabled((value) => {
@@ -3241,34 +3278,46 @@ export default function App() {
                           });
                         }}
                         type="button"
-                        disabled={cameraState !== "ready" || models.length === 0 || tfjsStatus === "converting"}
+                        disabled={
+                          cameraState !== "ready"
+                          || models.length === 0
+                          || (inferenceMode === "tfjs" && tfjsStatus === "converting")
+                        }
                       >
                         <span className="button-content">
                           <StatusDot
                             color={
                               liveClassificationEnabled
                                 ? "#7ef0db"
-                                : tfjsStatus === "error"
+                                : inferenceMode === "tfjs" && tfjsStatus === "error"
                                   ? "#ff7a7a"
                                   : "#f5b860"
                             }
                           />
-                          {liveClassificationEnabled
-                            ? "Live Classification ON"
-                            : tfjsStatus === "converting"
-                              ? "Preparing live classification"
-                              : "Live Classification OFF"}
+                          {inferenceMode === "tfjs"
+                            ? liveClassificationEnabled
+                              ? "Live Classification ON"
+                              : tfjsStatus === "converting"
+                                ? "Preparing live classification"
+                                : "Live Classification OFF"
+                            : liveClassificationEnabled
+                              ? "Auto API ON"
+                              : "Auto API OFF"}
                         </span>
                       </button>
 
                       <span className="live-stream-hint">
-                        {tfjsStatus === "converting"
-                          ? "Converting model for live classification, this may take a moment..."
-                          : inferenceMode === "tfjs"
-                            ? "On-device model ready"
-                            : tfjsStatus === "error"
-                              ? "On-device model unavailable"
-                              : "Select a model to prepare live classification"}
+                        {inferenceMode === "tfjs"
+                          ? tfjsStatus === "converting"
+                            ? "Converting model for live classification, this may take a moment..."
+                            : tfjsModel
+                              ? "On-device model ready"
+                              : tfjsStatus === "error"
+                                ? "On-device model unavailable"
+                                : "Select a model to prepare live classification"
+                          : liveClassificationEnabled
+                            ? "Auto API classification runs every 5 seconds."
+                            : "API mode ready. Turn on Auto to classify every 5 seconds."}
                       </span>
             
                      
